@@ -2,7 +2,7 @@
 layout: post
 title:  "为什么UUID是唯一的"
 date:   2020-10-16 19:30:13
-categories: project-experience
+categories: program
 tags: uuid
 ---
 
