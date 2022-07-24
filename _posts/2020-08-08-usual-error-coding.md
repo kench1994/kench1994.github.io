@@ -9,4 +9,4 @@ tags: encode
 * content
 {:toc}
 
-![errorEncoding](../assets/errorEncoding.png)
+![errorEncoding](/assets/errorEncoding.png)
