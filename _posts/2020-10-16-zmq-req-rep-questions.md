@@ -27,4 +27,4 @@ Networks can fail in exotic ways, e.g., some ports on a switch may die and those
 
 Entire data centers can be struck by lightning, earthquakes, fire, or more mundane power or cooling failures.
 
-form 
+form [https://zguide.zeromq.org/docs/chapter4/](https://zguide.zeromq.org/docs/chapter4/)
