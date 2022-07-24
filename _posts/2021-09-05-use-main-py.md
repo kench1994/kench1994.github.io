@@ -21,6 +21,7 @@ python myapp.py This works just fine for single file projects.
 
 The problem If you are like me, you do not want your entire application in a single python file. Separating related logic out into their own files makes for easier editing and maintainability. For example:
 
+``` shell
 .
 ├── README.me
 ├── requirements.txt
@@ -31,10 +32,13 @@ The problem If you are like me, you do not want your entire application in a sin
     ├── logic.py
     ├── models.py
     └── run.py
+```
+
 But then this raises confusion to a user who just downloaded your program. Which one is the main file? Is it run.py? Or maybe client.py? What file has my precious if __name__ == __main__ statement? This is where we can get a lot of value from __main__.py.
 
 main.py The magic file main.py is called when you run your project with the -m module flag. If you code is intended to be used a module first, and command line interface second, this makes perfect sense to use. Think of it as a place we can put whatever would be in our body of our if __name__ == __main__ statement. Refactoring the project above to conform:
 
+``` shell
 .
 ├── README.me
 ├── requirements.txt
@@ -45,6 +49,8 @@ main.py The magic file main.py is called when you run your project with the -m m
     ├── client.py
     ├── logic.py
     ├── models.py
+```
+    
 And now we just run it as a module not a singleton program.
 
 python -m myapp
