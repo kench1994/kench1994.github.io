@@ -2,8 +2,8 @@
 layout: post
 title:  "ZeroMQ connect return 0 even when no server listen)"
 date:   2020-10-16 19:14:08
-categories: project-experience
-tags: c/c++ zmq
+categories: c/c++
+tags: zmq
 ---
 
 * content
