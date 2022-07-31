@@ -22,6 +22,14 @@ cd gcc-7.5.0
 # 下载编译gcc所需的依赖文件和库
 ./contrib/download_prerequisites
 
+# 如果这里没反应可以手动下载依赖存放到gcc源码目录(建议使用迅雷等工具)
+wget ftp://gcc.gnu.org/pub/gcc/infrastructure/gmp-6.1.0.tar.bz2
+wget ftp://gcc.gnu.org/pub/gcc/infrastructure/mpfr-3.1.4.tar.bz2
+wget ftp://gcc.gnu.org/pub/gcc/infrastructure/mpc-1.0.3.tar.gz
+wget ftp://gcc.gnu.org/pub/gcc/infrastructure/isl-0.16.1.tar.bz2
+
+# 放置完成再次执行 ./contrib/download_prerequisites
+
 # 建立输出目录，用于存放编译时所有产生的中间文件
 mkdir build
 
