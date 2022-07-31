@@ -3,7 +3,7 @@ layout: post
 title:  "cast compare"
 date:   2020-10-16 19:14:08
 categories: c/c++
-tags: program
+tags: c/c++
 ---
 
 * content
