@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "Pass SIGINT to debugging terminal in vscode"
-date:   2022-08-08 09:17:30
+title: "Pass SIGINT to debugging terminal in vscode"
+date: 2022-08-08 09:17:30
 categories: linux
 tags: gdb vscode linux signals
 ---
