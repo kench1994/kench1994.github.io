@@ -3,7 +3,7 @@ layout: post
 title: "In what order should I send signals to gracefully shutdown processes?"
 date: 2022-08-08 09:42:41
 categories: linux
-tags: linux signals
+tags: linux
 ---
 
 * content
