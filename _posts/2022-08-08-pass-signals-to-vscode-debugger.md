@@ -9,11 +9,29 @@ tags: gdb
 * content
 {:toc}
 
-1. Requires "stopAtEntry": true in lauch.json
-2. In the Debug Console of vs code write:
 ``` shell
--exec handle SIGINT pass
--exec handle SIGINT nostop
+{
+    "version": "0.2.0",
+    "configurations": [    
+        {
+            "name": "debugging of local server",
+            "type": "cppdbg",
+            "request": "attach",
+            "program": "/usr/local/pgsql/bin/postgres",
+            "processId": "${command:pickProcess}",
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "ignore SIGINT signal",
+                    "text": "handle SIGINT nostop noprint pass"
+                }
+            ]            
+        }
+    ]
+}
 ```
-
-[future documents](https://sourceware.org/gdb/current/onlinedocs/gdb/Signals.html)
