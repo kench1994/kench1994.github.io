@@ -8,6 +8,16 @@ tags: linux
 
 * content
 {:toc}
+查看```glibc```版本
+``` shell
+$ ldd --version
+ldd (GNU libc) 2.17
+Copyright (C) 2012 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+Written by Roland McGrath and Ulrich Drepper.
+```
+
 
 用ldd命令查看可执行文件依赖于哪些共享库：
 
