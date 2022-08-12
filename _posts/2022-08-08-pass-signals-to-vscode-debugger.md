@@ -25,7 +25,13 @@ tags: gdb
                     "description": "Enable pretty-printing for gdb",
                     "text": "-enable-pretty-printing",
                     "ignoreFailures": true
-                },
+                }
+                ,
+                {   "description": "The new process is debugged after a fork. The parent process runs unimpeded.",
+                    "text": "-gdb-set follow-fork-mode child",
+                    "ignoreFailures": true
+                }
+                ,
                 {
                     "description": "ignore SIGINT signal",
                     "text": "handle SIGINT nostop noprint pass"
