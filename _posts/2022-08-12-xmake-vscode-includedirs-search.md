@@ -10,11 +10,11 @@ tags: openssl
 {:toc}
 
 
-使用``xmake project -k compile_commands .vscode/``生成 ``compile_commands.json``
+使用``xmake project -k compile_commands .vscode/`` 指令生成 ``compile_commands.json``
 
-``vscode`` 界面按下 ``Ctrl+Shift+P`` 选择 **C/C++: Edit Configurations (UI)** 进入``c_cpp_properties.json``
+**vscode** 界面依次按下 ``Ctrl+Shift+P`` 快捷键,然后选择 **C/C++: Edit Configurations (UI)** 进入``c_cpp_properties.json``
 
-``compileCommands``字段中指定``xmake``生成的json文件
+编辑**compileCommands** 字段值为刚刚 **xmake** 生成的``json``文件
 ``` json
 {
     "configurations": [
