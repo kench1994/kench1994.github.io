@@ -9,7 +9,7 @@ tags: linux
 * content
 {:toc}
 
-### 01 localtime函数说明
+## 01 localtime函数说明
 (1) 函数定义
 ``` struct tm *localtime(const time_t *t); ``` 
 
@@ -17,7 +17,7 @@ tags: linux
 
 (3) 返回值：返回结构tm的指针，代表目前的当地时间。
 
-### 02 localtime函数使用
+## 02 localtime函数使用
 ``` c++
 int main(int argc, char *argv[]) {    
     time_t t0 = time(NULL);    
@@ -72,7 +72,7 @@ localtime_r (const time_t *t, struct tm *tp)
 }
 ```
 
-由此可见，``localtime_r``内部还是调用了``localtime``，但是，每次调用完成后，马上将返回结果填充到传入的第二个参数tp指向的内存里，再返回tp，因此，该函数线程是可重入的.
+由此可见，``localtime_r``内部还是调用了``localtime``，但是，每次调用完成后，马上将返回结果填充到传入的第二个参数``tp``指向的内存里，再返回``tp``，因此，该函数线程是可重入的.
 
 尽管在多线程下，调用``localtime_r``是线程安全的，但是性能可能会受到影响。例如：在输出日志输出时，我们需要通过``localtime_r``获取当前时间，多线程并发调用时，容易发生锁等待，导致性能下降。锁的产生来源于``__tz_convert``的调用，该函数的部分实现如下：
 
@@ -92,14 +92,14 @@ __tz_convert (const time_t *timer, int use_localtime, struct tm *tp)
 }
 ```
 
-### 03 死锁问题
+## 03 死锁问题
 ``localtime_r`` 是线程安全的，但是，对如下两种情况并不安全，甚至会引发死锁。
 
 （1）信号处理函数调用``localtime``：假如进程调用``localtime``，已经获取全局锁，且并没有释放。此时，如果进程接收到信号，在信号处理函数也调用了``localtime``，就会造成死锁。
 
 （2）多线程下``fork``：在多线程下，若线程A调用``localtime``，已经获取全局锁，尚未释放锁。此时，假如线程B调用了fork，并且在子进程也调用``localtime``，也会造成死锁，导致子进程一直被hang住。因为fork出来的子进程只会复制调用它的线程，而其他线程不会被复制到子进程执行，也就是说当前子进程中只有线程B在运行。子进程会复制父进程的用户空间数据，包括了锁的信息。
 
-Redis的日志输出函数redisLogRaw中也是调用``localtime``来获取时间的。同时，Redis也是会存在多线程fork的情况。那么，Redis会不会有前文提到的性能问题和死锁问题呢？
+Redis的日志输出函数``redisLogRaw``中也是调用``localtime``来获取时间的。同时，Redis也是会存在多线程fork的情况。那么，Redis会不会有前文提到的性能问题和死锁问题呢？
 
 在5.0.0之前的版本，Redis确实是使用``localtime``来进行时间转换。但是，由于Redis是单线程的架构，不存在竞争的情况，因此，一般情况下，不存在多个线程调用竞争而导致性能下降或者线程不安全的问题。
 
@@ -158,8 +158,8 @@ void nolocks_localtime(struct tm *tmp, time_t t, time_t tz, int dst) {
 
 ``nolocks_localtime``在功能上与``localtime``一样，都是将``time_t``类型的时间戳转换成包含年月日的``tm``类型，但是，它是非阻塞的、无锁的，且线程安全的，多线程下``fork``也是安全的。缺点就是需要自己实现时间的转换逻辑。
 
-### 总结
+## 总结
 
 （1）在实现日志输出函数或者接口时，时间转换应当尽量避免使用``localtime``或者``localtime_r``函数，尤其是在多线程的调用环境下，可能会影响程序的性能。可以考虑使用一个全局的时间变量，让某个线程定期去更新该时间变量，其他线程直接读取该时间变量。Redis也有类似的用法，在``serverCron``函数(默认每秒调用10次)中调用``updateCacheTime``函数来更新全局的``unix time``。 
 
-（2）信号处理函数或多线程fork()中，尽量避免使用这种会持有全局锁的函数，以免造成死锁的情况。
+（2）信号处理函数或多线程``fork()``中，尽量避免使用这种会持有全局锁的函数，以免造成死锁的情况。
