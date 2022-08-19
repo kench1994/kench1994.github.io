@@ -67,7 +67,8 @@ Jan  9 20:19:50 ant echo-forever[30807]: Hello, world!
 ```
 实现步骤
 回头来看看 daemonize 函数的实现，这是本文的重点——初始化守护进程的关键步骤：
-``` c++ {.numberLines}
+
+``` c++ 
 #include <fcntl.h>
 #include <signal.h>
 #include <stdlib.h>
@@ -132,6 +133,7 @@ daemonize()
     return 0;
 }
 ```
+
 - 第 12-18 行，调用 fork 系统调用派生子进程，以便实现：①如果守护进程由 shell 启动，父进程退出会让 shell 认为命令执行完毕；②子进程虽继承了父进程的进程组 ID ，但获得新的进程 ID ，保证子进程不是组长进程，为调用 setsid 做准备。
 - 第 21 行，调用 setsid 创建新会话，使调用进程：①成为新会话首进程；②新进程组组长；③没有控制终端(脱离控制终端)。
 - 再次调用 fork 并终止父进程，保证守护进程(子进程)不是会话首进程，防止它再次取得控制终端。

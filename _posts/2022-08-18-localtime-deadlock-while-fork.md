@@ -9,15 +9,15 @@ tags: linux
 * content
 {:toc}
 
-#### 01 localtime函数说明
+### 01 localtime函数说明
 (1) 函数定义
-``` c++
-struct tm *localtime(const time_t *t);
-```
+``` struct tm *localtime(const time_t *t); ``` 
+
 (2) 函数说明：将1970.01.01 00:00:00 到现在经过的秒数转换为换成真实世界所使用的时间日期。
+
 (3) 返回值：返回结构tm的指针，代表目前的当地时间。
 
-#### 02 localtime函数使用
+### 02 localtime函数使用
 ``` c++
 int main(int argc, char *argv[]) {    
     time_t t0 = time(NULL);    
@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
 22:30:26 
 22:30:26
 ```
-输出的两个时间其实是一样的，两者并不是相差半个小时。猜想第二次调用localtime的返回值把tm1的值给覆盖了，内部可能使用了tm类型全局变量。查看localtime函数代码如下：
+输出的两个时间其实是一样的，两者并不是相差半个小时。猜想第二次调用``localtime``的返回值把tm1的值给覆盖了，内部可能使用了``tm``类型全局变量。查看``localtime``函数代码如下：
 
 ``` c++
 /* The C Standard says that localtime and gmtime return the same pointer. */
@@ -58,7 +58,7 @@ struct tm * localtime (const time_t *t) {
 return __tz_convert (t, 1, &_tmbuf); 
 }
 ```
-可以看到，localtime调用__tz_convert传入的第三个参数_tmbuf是一个全局变量，并且__tz_convert返回值就是_tmbuf的指针。返回指针所指向的全局变量可能被其他线程调用localtime给覆盖掉。因此，localtime并不是线程安全的。应使用线程安全的localtime_r函数代替它。localtime_r代码如下：
+可以看到，``localtime``调用``__tz_conver``t传入的第三个参数``_tmbuf``是一个全局变量，并且``__tz_convert``返回值就是_tmbuf的指针。返回指针所指向的全局变量可能被其他线程调用``localtime``给覆盖掉。因此，``localtime``并不是线程安全的。应使用线程安全的``localtime_r``函数代替它。``localtime_r``代码如下：
 
 ``` c++
 static struct tm * 
@@ -72,9 +72,9 @@ localtime_r (const time_t *t, struct tm *tp)
 }
 ```
 
-由此可见，localtime_r内部还是调用了localtime，但是，每次调用完成后，马上将返回结果填充到传入的第二个参数tp指向的内存里，再返回tp，因此，该函数线程是可重入的.
+由此可见，``localtime_r``内部还是调用了``localtime``，但是，每次调用完成后，马上将返回结果填充到传入的第二个参数tp指向的内存里，再返回tp，因此，该函数线程是可重入的.
 
-尽管在多线程下，调用localtime_r是线程安全的，但是性能可能会受到影响。例如：在输出日志输出时，我们需要通过localtime_r获取当前时间，多线程并发调用时，容易发生锁等待，导致性能下降。锁的产生来源于__tz_convert的调用，该函数的部分实现如下：
+尽管在多线程下，调用``localtime_r``是线程安全的，但是性能可能会受到影响。例如：在输出日志输出时，我们需要通过``localtime_r``获取当前时间，多线程并发调用时，容易发生锁等待，导致性能下降。锁的产生来源于``__tz_convert``的调用，该函数的部分实现如下：
 
 ``` c++
 struct tm * 
@@ -92,16 +92,16 @@ __tz_convert (const time_t *timer, int use_localtime, struct tm *tp)
 }
 ```
 
-#### 03 死锁问题
+### 03 死锁问题
 ``localtime_r`` 是线程安全的，但是，对如下两种情况并不安全，甚至会引发死锁。
 
 （1）信号处理函数调用``localtime``：假如进程调用``localtime``，已经获取全局锁，且并没有释放。此时，如果进程接收到信号，在信号处理函数也调用了``localtime``，就会造成死锁。
 
-（2）多线程下fork：在多线程下，若线程A调用localtime，已经获取全局锁，尚未释放锁。此时，假如线程B调用了fork，并且在子进程也调用localtime，也会造成死锁，导致子进程一直被hang住。因为fork出来的子进程只会复制调用它的线程，而其他线程不会被复制到子进程执行，也就是说当前子进程中只有线程B在运行。子进程会复制父进程的用户空间数据，包括了锁的信息。
+（2）多线程下``fork``：在多线程下，若线程A调用``localtime``，已经获取全局锁，尚未释放锁。此时，假如线程B调用了fork，并且在子进程也调用``localtime``，也会造成死锁，导致子进程一直被hang住。因为fork出来的子进程只会复制调用它的线程，而其他线程不会被复制到子进程执行，也就是说当前子进程中只有线程B在运行。子进程会复制父进程的用户空间数据，包括了锁的信息。
 
-Redis的日志输出函数redisLogRaw中也是调用localtime来获取时间的。同时，Redis也是会存在多线程fork的情况。那么，Redis会不会有前文提到的性能问题和死锁问题呢？
+Redis的日志输出函数redisLogRaw中也是调用``localtime``来获取时间的。同时，Redis也是会存在多线程fork的情况。那么，Redis会不会有前文提到的性能问题和死锁问题呢？
 
-在5.0.0之前的版本，Redis确实是使用localtime来进行时间转换。但是，由于Redis是单线程的架构，不存在竞争的情况，因此，一般情况下，不存在多个线程调用竞争而导致性能下降或者线程不安全的问题。
+在5.0.0之前的版本，Redis确实是使用``localtime``来进行时间转换。但是，由于Redis是单线程的架构，不存在竞争的情况，因此，一般情况下，不存在多个线程调用竞争而导致性能下降或者线程不安全的问题。
 
 我们说Redis是单线的，指它在处理所有的请求都是在一个线程完成的。其实，Redis还是有后台线程，异步去完成某些任务的。截至目前版本，Redis共有三个后台线程，作用如下：
 
@@ -109,7 +109,7 @@ Redis的日志输出函数redisLogRaw中也是调用localtime来获取时间的�
 - AOF的刷盘
 - 异步删除大Key
 
-在一定条件下，Redis会启用这些线程后台完成一些任务。因此，还是存在前文提到死锁的风险。既然阻塞的方式获取时间转换会导致死锁，那么，就需要一个无锁、无阻塞的函数替换掉localtime。在5.0.0版本中就实现了这样一个函数——nolocks_localtime，如下代码实现：
+在一定条件下，Redis会启用这些线程后台完成一些任务。因此，还是存在前文提到死锁的风险。既然阻塞的方式获取时间转换会导致死锁，那么，就需要一个无锁、无阻塞的函数替换掉``localtime``。在5.0.0版本中就实现了这样一个函数——``nolocks_localtime``，如下代码实现：
 
 ``` c++
 void nolocks_localtime(struct tm *tmp, time_t t, time_t tz, int dst) {
@@ -156,9 +156,10 @@ void nolocks_localtime(struct tm *tmp, time_t t, time_t tz, int dst) {
 }
 ```
 
-nolocks_localtime在功能上与localtime一样，都是将time_t类型的时间戳转换成包含年月日的tm类型，但是，它是非阻塞的、无锁的，且线程安全的，多线程下fork也是安全的。缺点就是需要自己实现时间的转换逻辑。
+``nolocks_localtime``在功能上与``localtime``一样，都是将``time_t``类型的时间戳转换成包含年月日的``tm``类型，但是，它是非阻塞的、无锁的，且线程安全的，多线程下``fork``也是安全的。缺点就是需要自己实现时间的转换逻辑。
 
-#### 总结
+### 总结
 
-（1）在实现日志输出函数或者接口时，时间转换应当尽量避免使用localtime或者localtime_r函数，尤其是在多线程的调用环境下，可能会影响程序的性能。可以考虑使用一个全局的时间变量，让某个线程定期去更新该时间变量，其他线程直接读取该时间变量。Redis也有类似的用法，在serverCron函数(默认每秒调用10次)中调用updateCacheTime函数来更新全局的unix time。
+（1）在实现日志输出函数或者接口时，时间转换应当尽量避免使用``localtime``或者``localtime_r``函数，尤其是在多线程的调用环境下，可能会影响程序的性能。可以考虑使用一个全局的时间变量，让某个线程定期去更新该时间变量，其他线程直接读取该时间变量。Redis也有类似的用法，在``serverCron``函数(默认每秒调用10次)中调用``updateCacheTime``函数来更新全局的``unix time``。 
+
 （2）信号处理函数或多线程fork()中，尽量避免使用这种会持有全局锁的函数，以免造成死锁的情况。
