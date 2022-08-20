@@ -2,14 +2,14 @@
 layout: post
 title: "localtime函数的死锁风险"
 date: 2022-08-18 17:38:27
-categories: program
+categories: linux
 tags: linux
 ---
 
 * content
 {:toc}
 
-## 01 localtime函数说明
+## **01** localtime函数说明
 (1) 函数定义
 ``` struct tm *localtime(const time_t *t); ``` 
 
@@ -17,7 +17,7 @@ tags: linux
 
 (3) 返回值：返回结构tm的指针，代表目前的当地时间。
 
-## 02 localtime函数使用
+## **02** localtime函数使用
 ``` c++
 int main(int argc, char *argv[]) {    
     time_t t0 = time(NULL);    
@@ -38,12 +38,14 @@ int main(int argc, char *argv[]) {
 ```
 
 假设当前运行时间为22:00:26，那么上述代码运行结果会是什么呢？
+
 ``` shell 
 [xxxx@xx-xxx-xxxx-xx00 test]$ gcc localtime_test.c -o test 
 [xxxx@xx-xxx-xxxx-xx00 test]$ ./test
 22:30:26 
 22:30:26
 ```
+
 输出的两个时间其实是一样的，两者并不是相差半个小时。猜想第二次调用``localtime``的返回值把tm1的值给覆盖了，内部可能使用了``tm``类型全局变量。查看``localtime``函数代码如下：
 
 ``` c++
@@ -58,7 +60,8 @@ struct tm * localtime (const time_t *t) {
 return __tz_convert (t, 1, &_tmbuf); 
 }
 ```
-可以看到，``localtime``调用``__tz_conver``t传入的第三个参数``_tmbuf``是一个全局变量，并且``__tz_convert``返回值就是_tmbuf的指针。返回指针所指向的全局变量可能被其他线程调用``localtime``给覆盖掉。因此，``localtime``并不是线程安全的。应使用线程安全的``localtime_r``函数代替它。``localtime_r``代码如下：
+
+可以看到，``localtime``调用``__tz_conver``t传入的第三个参数``_tmbuf``是一个全局变量，并且``__tz_convert``返回值就是``_tmbuf``的指针。返回指针所指向的全局变量可能被其他线程调用``localtime``给覆盖掉。因此，``localtime``并不是线程安全的。应使用线程安全的``localtime_r``函数代替它。``localtime_r``代码如下：
 
 ``` c++
 static struct tm * 
@@ -92,12 +95,12 @@ __tz_convert (const time_t *timer, int use_localtime, struct tm *tp)
 }
 ```
 
-## 03 死锁问题
+## **03** 死锁问题
 ``localtime_r`` 是线程安全的，但是，对如下两种情况并不安全，甚至会引发死锁。
 
 （1）信号处理函数调用``localtime``：假如进程调用``localtime``，已经获取全局锁，且并没有释放。此时，如果进程接收到信号，在信号处理函数也调用了``localtime``，就会造成死锁。
 
-（2）多线程下``fork``：在多线程下，若线程A调用``localtime``，已经获取全局锁，尚未释放锁。此时，假如线程B调用了fork，并且在子进程也调用``localtime``，也会造成死锁，导致子进程一直被hang住。因为fork出来的子进程只会复制调用它的线程，而其他线程不会被复制到子进程执行，也就是说当前子进程中只有线程B在运行。子进程会复制父进程的用户空间数据，包括了锁的信息。
+（2）多线程下``fork``：在多线程下，若线程A调用``localtime``，已经获取全局锁，尚未释放锁。此时，假如线程B调用了``fork``，并且在子进程也调用``localtime``，也会造成死锁，导致子进程一直被``hang``住。因为``fork``出来的子进程只会复制调用它的线程，而其他线程不会被复制到子进程执行，也就是说当前子进程中只有线程B在运行。子进程会复制父进程的用户空间数据，包括了锁的信息。
 
 Redis的日志输出函数``redisLogRaw``中也是调用``localtime``来获取时间的。同时，Redis也是会存在多线程fork的情况。那么，Redis会不会有前文提到的性能问题和死锁问题呢？
 
@@ -108,6 +111,7 @@ Redis的日志输出函数``redisLogRaw``中也是调用``localtime``来获取�
 - 异步关闭文件
 - AOF的刷盘
 - 异步删除大Key
+
 
 在一定条件下，Redis会启用这些线程后台完成一些任务。因此，还是存在前文提到死锁的风险。既然阻塞的方式获取时间转换会导致死锁，那么，就需要一个无锁、无阻塞的函数替换掉``localtime``。在5.0.0版本中就实现了这样一个函数——``nolocks_localtime``，如下代码实现：
 
@@ -158,7 +162,7 @@ void nolocks_localtime(struct tm *tmp, time_t t, time_t tz, int dst) {
 
 ``nolocks_localtime``在功能上与``localtime``一样，都是将``time_t``类型的时间戳转换成包含年月日的``tm``类型，但是，它是非阻塞的、无锁的，且线程安全的，多线程下``fork``也是安全的。缺点就是需要自己实现时间的转换逻辑。
 
-## 总结
+## **总结**
 
 （1）在实现日志输出函数或者接口时，时间转换应当尽量避免使用``localtime``或者``localtime_r``函数，尤其是在多线程的调用环境下，可能会影响程序的性能。可以考虑使用一个全局的时间变量，让某个线程定期去更新该时间变量，其他线程直接读取该时间变量。Redis也有类似的用法，在``serverCron``函数(默认每秒调用10次)中调用``updateCacheTime``函数来更新全局的``unix time``。 
 
