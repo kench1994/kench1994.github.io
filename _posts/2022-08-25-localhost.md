@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "localhost/127.0.0.1/本机ip/0.0.0.0 的区别"
-date:   2022-08-25 17:35:51
+title: "localhost/127.0.0.1/本机ip/0.0.0.0 的区别"
+date: 2022-08-25 17:35:51
 categories: program
 tags: network
 ---
@@ -32,11 +32,9 @@ tags: network
 linux中查看信息：
 
 ``` shell
-lo        Link encap:Local Loopback
-
-          inet addr:127.0.0.1  Mask:255.0.0.0
-
-          inet6 addr: ::1/128 Scope:Host
+lo Link encap:Local Loopback
+   inet addr:127.0.0.1  Mask:255.0.0.0
+   inet6 addr: ::1/128 Scope:Host
 ```
 
 事实上整个127.*网段都能用，ping都能通。使用127.0.0.1作为loopback的默认地址是个惯例。
@@ -58,7 +56,6 @@ lo        Link encap:Local Loopback
 ``` shell
 server.listen({
   host: '0.0.0.0',
-
   port: 7047
 });
 ```

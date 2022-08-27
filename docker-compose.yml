@@ -9,6 +9,8 @@ services:
     volumes:
       - $PWD:/srv/jekyll
       - $PWD/vendor/bundle:/usr/local/bundle
+      - /usr/share/zoneinfo/Asia/Shanghai:/etc/localtime
+      - /etc/timezone:/etc/timezone
     command: ["jekyll", "serve"]
 
 # sudo docker run -d \
