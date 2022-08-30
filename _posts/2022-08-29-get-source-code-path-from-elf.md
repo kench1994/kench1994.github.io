@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "get source code path/filename from elf file"
-date:   2020-08-29 09:14:19
+title: "get source code path/filename from elf file"
+date: 2022-08-29 09:14:19
 categories: program
 tags: linux
 ---
