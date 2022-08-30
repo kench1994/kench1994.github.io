@@ -3,7 +3,7 @@ layout: post
 title:  "get source code path/filename from elf file"
 date:   2020-08-29 09:14:19
 categories: program
-tags: linux gdb
+tags: linux
 ---
 
 * content
