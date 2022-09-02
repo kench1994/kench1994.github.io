@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "shell echo with/without quotes"
-date: 2022-08-29 09:14:19
+date: 2022-08-31 19:14:19
 categories: shell
 tags: linux
 ---
@@ -9,8 +9,8 @@ tags: linux
 * content
 {:toc}
 
-Expression	|	Result	|	Comments
-:-------- | :--------| :--
+Expression	| Result	| Comments
+:-------- | :-------- | :-------- |
 "$a"	|	apple	|	variables are expanded inside ""
 '$a'	|	$a	|	variables are not expanded inside ''
 "'$a'"	|	'apple'	|	'' has no special meaning inside ""
