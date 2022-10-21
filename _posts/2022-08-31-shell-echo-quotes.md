@@ -9,8 +9,8 @@ tags: linux
 * content
 {:toc}
 
-Expression	| Result	| Comments
-:-------- | :-------- | :-------- |
+Expression | Result | Comments
+:-------- | :-------- | :--------
 "$a"	|	apple	|	variables are expanded inside ""
 '$a'	|	$a	|	variables are not expanded inside ''
 "'$a'"	|	'apple'	|	'' has no special meaning inside ""
@@ -24,7 +24,8 @@ Expression	| Result	| Comments
 "*"	|	*	|	glob does not work inside "" or ''
 "\t\n"	|	\t\n	|	\t and \n have no special meaning inside "" or ''; use ANSI-C quoting
 "`echo hi`"	|	hi	|	`` and $() are evaluated inside "" (backquotes are retained in actual output)
-'`echo hi`'	|	`echo hi`	|	`` and $() are not evaluated inside '' (backquotes are retained in actual output)
+
+'`echo hi`'	|	`echo hi`	| `` and $() are not evaluated inside '' (backquotes are retained in actual output)
 '${arr[0]}'	|	${arr[0]}	|	array access not possible inside ''
 "${arr[0]}"	|	apple	|	array access works inside ""
 $'$a\''	|	$a'	|	single quotes can be escaped inside ANSI-C quoting
@@ -32,5 +33,7 @@ $'$a\''	|	$a'	|	single quotes can be escaped inside ANSI-C quoting
 '!cmd'	|	!cmd	|	history expansion character '!' is ignored inside ''
 "!cmd"	|	cmd args	|	expands to the most recent command matching "cmd"
 $'!cmd'	|	!cmd	|	history expansion character '!' is ignored inside ANSI-C quotes
+
+
 
 **double-quote in expansion prevents unwanted word splitting and globbing**
