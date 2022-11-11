@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  Linux环境中动态库文件(.so文件)的realname,soname和linkname
-date:   2022-11-09 15:16:59
+date:   2022-11-10 15:16:59
 categories: linux
 tags: linux
 ---
