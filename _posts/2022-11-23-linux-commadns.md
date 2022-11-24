@@ -94,7 +94,7 @@ netstat -au    #列出所有udp端口
 ```netstat -an```
 
 如果只是不想让这三个名称中的一个被显示，使用以下命令:
-```
+ ```
 netsat -a --numeric-ports
 netsat -a --numeric-hosts
 netsat -a --numeric-users
