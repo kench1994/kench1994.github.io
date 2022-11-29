@@ -2,8 +2,8 @@
 layout: post
 title:  Bash File Testing
 date:   2022-11-01 13:41:34
-categories: shell
-tags: shell
+categories: linux
+tags: linux
 ---
 
 * content

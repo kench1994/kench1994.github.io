@@ -2,8 +2,8 @@
 layout: post
 title:  Set up Ubuntu Desktop with LVM Partitions
 date:   2022-11-10 14:28:23
-categories: 
-tags: 
+categories: linux
+tags: linux
 ---
 
 * content

@@ -3,7 +3,7 @@ layout: post
 title: "localtime函数的死锁风险"
 date: 2022-08-18 17:38:27
 categories: program
-tags: linux /c++
+tags: c/c++
 ---
 
 * content

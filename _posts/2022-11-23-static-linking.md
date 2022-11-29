@@ -2,8 +2,8 @@
 layout: post
 title:  Static library linking issues
 date:   2022-11-23 10:42:58
-categories: 
-tags: 
+categories: linux
+tags: linux
 ---
 
 * content
