@@ -124,3 +124,252 @@ netsat -a --numeric-users
 
 通过端口找进程ID
 ```netstat -anp|grep 8081 | grep LISTEN|awk '{printf $7}'|cut -d/ -f1```
+
+
+### **pmap**
+``` shell
+[root@pdai-centos ~]# pmap -h
+
+Usage:
+ pmap [options] PID [PID ...]
+
+Options:
+ -x, --extended              show details
+ -X                          show even more details
+            WARNING: format changes according to /proc/PID/smaps
+ -XX                         show everything the kernel provides
+ -c, --read-rc               read the default rc
+ -C, --read-rc-from=<file>   read the rc from file
+ -n, --create-rc             create new default rc
+ -N, --create-rc-to=<file>   create new rc to file
+            NOTE: pid arguments are not allowed with -n, -N
+ -d, --device                show the device format
+ -q, --quiet                 do not display header and footer
+ -p, --show-path             show path in the mapping
+ -A, --range=<low>[,<high>]  limit results to the given range
+
+ -h, --help     display this help and exit
+ -V, --version  output version information and exit
+
+For more details see pmap(1).
+```
+
+``` shell
+tipray@tipray:~$ sudo pmap -p 699453 | grep info
+00007f8bb14ea000    372K r-x-- /opt/trdlp/TrDlpEngineSrv/libs_x64/libtrrinfo.so
+00007f8bb1547000   2048K ----- /opt/trdlp/TrDlpEngineSrv/libs_x64/libtrrinfo.so
+00007f8bb1747000     16K rw--- /opt/trdlp/TrDlpEngineSrv/libs_x64/libtrrinfo.so
+```
+
+### **lsof**
+``` shell
+-a 列出打开文件存在的进程
+-c<进程名> 列出指定进程所打开的文件
+-g 列出GID号进程详情
+-d<文件号> 列出占用该文件号的进程
++d<目录> 列出目录下被打开的文件
++D<目录> 递归列出目录下被打开的文件
+-n<目录> 列出使用NFS的文件
+-i<条件> 列出符合条件的进程。（4、6、协议、:端口、 @ip ）
+-p<进程号> 列出指定进程号所打开的文件
+-u 列出UID号进程详情
+-h 显示帮助信息
+-v 显示版本信息
+```
+- 实例1：无任何参数
+``` shell
+$lsof| more
+COMMAND     PID      USER   FD      TYPE             DEVICE SIZE/OFF       NODE NAME
+init          1      root  cwd       DIR              253,0     4096          2 /
+init          1      root  rtd       DIR              253,0     4096          2 /
+init          1      root  txt       REG              253,0   150352    1310795 /sbin/init
+init          1      root  mem       REG              253,0    65928    5505054 /lib64/libnss_files-2.12.so
+init          1      root  mem       REG              253,0  1918016    5521405 /lib64/libc-2.12.so
+init          1      root  mem       REG              253,0    93224    5521440 /lib64/libgcc_s-4.4.6-20120305.so.1
+init          1      root  mem       REG              253,0    47064    5521407 /lib64/librt-2.12.so
+init          1      root  mem       REG              253,0   145720    5521406 /lib64/libpthread-2.12.so
+...
+```
+
+- 实例2：查找某个文件相关的进程
+``` shell
+$lsof /bin/bash
+COMMAND     PID USER  FD   TYPE DEVICE SIZE/OFF    NODE NAME
+mysqld_sa  2169 root txt    REG  253,0   938736 4587562 /bin/bash
+ksmtuned   2334 root txt    REG  253,0   938736 4587562 /bin/bash
+bash      20121 root txt    REG  253,0   938736 4587562 /bin/bash
+```
+- 实例3：列出某个用户打开的文件信息
+``` shell
+$lsof -u username
+
+-u 选项，u是user的缩写
+``
+
+- 实例4：列出某个程序进程所打开的文件信息
+``` shell
+$lsof -c mysql
+-c 选项将会列出所有以mysql这个进程开头的程序的文件，其实你也可以写成 lsof | grep mysql, 但是第一种方法明显比第二种方法要少打几个字符；
+ ```
+
+- 实例5：列出某个用户以及某个进程所打开的文件信息
+``` shell
+$lsof  -u test -c mysql
+```
+- 实例6：通过某个进程号显示该进程打开的文件
+``` shell
+$lsof -p 11968
+```
+- 实例7：列出所有的网络连接
+``` shell
+$lsof -i
+```
+- 实例8：列出所有tcp 网络连接信息
+``` shell
+$lsof -i tcp
+
+$lsof -n -i tcp
+COMMAND     PID  USER   FD   TYPE  DEVICE SIZE/OFF NODE NAME
+svnserve  11552 weber    3u  IPv4 3799399      0t0  TCP *:svn (LISTEN)
+redis-ser 25501 weber    4u  IPv4  113150      0t0  TCP 127.0.0.1:6379 (LISTEN)
+```
+
+- 实例9：列出谁在使用某个端口
+``` shell
+$lsof -i :3306
+```
+- 实例10：列出某个用户的所有活跃的网络端口
+``` shell
+$lsof -a -u test -i
+```
+
+- 实例11：根据文件描述列出对应的文件信息
+``` shell
+$lsof -d description(like 2)
+示例:
+
+$lsof -d 3 | grep PARSER1
+tail      6499 tde    3r   REG    253,3   4514722     417798 /opt/applog/open/log/HOSTPARSER1_ERROR_141217.log.001
+```
+- 实例12：列出被进程号为1234的进程所打开的所有IPV4 network files
+``` shell
+$lsof -i 4 -a -p 1234
+```
+- 实例13：列出目前连接主机nf5260i5-td上端口为：20，21，80相关的所有文件信息，且每隔3秒重复执行
+``` shell
+lsof -i @nf5260i5-td:20,21,80 -r 3
+```
+
+
+### readelf
+这个工具和objdump命令提供的功能类似，但是它显示的信息更为具体，并且它不依赖BFD库(BFD库是一个GNU项目，它的目标就是希望通过一种统一的接口来处理不同的目标文件）；
+
+**ELF文件类型**
+>ELF(Executable and Linking Format)是一种对象文件的格式，用于定义不同类型的对象文件(Object files)中都放了什么东西、以及都以什么样的格式去放这些东西。它自最早在 System V 系统上出现后，被 xNIX 世界所广泛接受，作为缺省的二进制文件格式来使用。可以说，ELF是构成众多xNIX系统的基础之一。
+
+ELF文件有三种类型：
+
+- 可重定位的对象文件(Relocatable file)
+由汇编器汇编生成的 .o 文件
+- 可执行的对象文件(Executable file)
+可执行应用程序
+- 可被共享的对象文件(Shared object file)
+动态库文件，也即 .so 文件
+
+``` shell
+.text section 里装载了可执行代码；
+.data section 里面装载了被初始化的数据；
+.bss section 里面装载了未被初始化的数据；
+以 .rec 打头的 sections 里面装载了重定位条目；
+.symtab 或者 .dynsym section 里面装载了符号信息；
+.strtab 或者 .dynstr section 里面装载了字符串信息；
+```
+**参数说明**
+``` shell
+-a –all 全部 Equivalent to: -h -l -S -s -r -d -V -A -I
+-h –file-header 文件头 Display the ELF file header
+-l –program-headers 程序 Display the program headers
+–segments An alias for –program-headers
+-S –section-headers 段头 Display the sections’ header
+--sections
+An alias for –section-headers
+-e –headers 全部头 Equivalent to: -h -l -S
+-s –syms 符号表 Display the symbol table
+--symbols
+An alias for –syms
+-n –notes 内核注释 Display the core notes (if present)
+-r –relocs 重定位 Display the relocations (if present)
+-u –unwind Display the unwind info (if present)
+-d –dynamic 动态段 Display the dynamic segment (if present)
+-V –version-info 版本 Display the version sections (if present)
+-A –arch-specific CPU构架 Display architecture specific information (if any).
+-D –use-dynamic 动态段 Use the dynamic section info when displaying symbols
+-x –hex-dump= 显示 段内内容Dump the contents of section
+-w[liaprmfFso] or
+-I –histogram Display histogram of bucket list lengths
+-W –wide 宽行输出 Allow output width to exceed 80 characters
+-H –help Display this information
+-v –version Display the version number of readelf
+```
+
+**示例**
+想知道一个应用程序的可运行的架构平台:
+``` shell
+$readelf -h main| grep Machine
+```
+
+-h选项将显示文件头的概要信息，从里面可以看到，有很多有用的信息：
+``` shell
+$readelf -h main
+ELF Header:
+Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00
+Class:                             ELF64
+Data:                              2 s complement, little endian
+Version:                           1 (current)
+OS/ABI:                            UNIX - System V
+ABI Version:                       0
+Type:                              EXEC (Executable file)
+Machine:                           Advanced Micro Devices X86-64
+Version:                           0x1
+Entry point address:               0x400790
+Start of program headers:          64 (bytes into file)
+Start of section headers:          5224 (bytes into file)
+Flags:                             0x0
+Size of this header:               64 (bytes)
+Size of program headers:           56 (bytes)
+Number of program headers:         8
+Size of section headers:           64 (bytes)
+Number of section headers:         29
+Section header string table index: 26
+```
+
+一个编译好的应用程序，想知道其编译时是否使用了-g选项（加入调试信息）:
+```
+$readelf -S main| grep debug
+```
+用-S选项是显示所有段信息；如果编译时使用了-g选项，则会有debug段;
+
+查看.o文件是否编入了调试信息（编译的时候是否加了-g):
+``` shell
+$readelf -S Shpos.o | grep debug
+```
+
+### 翻屏：	
+	空格键：向文件尾部翻一屏；
+	b：向文件首部翻一屏；
+	Ctrl+d：向文件尾部翻半屏；
+	Ctrl+u：向文件首部翻半屏；
+	回车键：向文件尾部翻一行；
+	k：向文件首部翻一行；
+	G：跳转至最后一行；
+	#G：跳转至指定行，#是一个数字；
+	1G：跳转至文件首部；
+					
+	文本搜索：
+			/keyword : 从文件首部向文件尾部依次查找；不区分字符大小写；
+			?keyword : 从文件尾部向文件首部依次查找；
+			n：与查找命令方向相同；
+			N：与查找命令方向相反；
+	
+	退出：
+		 q：quit
