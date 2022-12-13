@@ -156,8 +156,9 @@ frame <args> will select a frame on the call stack for inspection
 info frame <args> will give you information about a specific frame from the stack. When called without arguments it will display the currently selected frame
 info locals can give you information about any local variables on the stack.
 
-up 1	往外层的堆栈帧移动一层
-down 2  向内层堆栈帧移动二层。如果不指定n，则n默认为1.
+``up 1``	往外层的堆栈帧移动一层
+
+``down 2``  向内层堆栈帧移动二层。如果不指定n，则n默认为1.
 
 
 ### 调试多进程
