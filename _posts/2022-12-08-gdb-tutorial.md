@@ -9,7 +9,7 @@ tags: gdb
 * content
 {:toc}
 
-#### 启动GDB的方法有以下几种：
+### 启动GDB的方法有以下几种：
 1.bin也就是你的执行文件，一般在当前目录下。
 ``gdb --tui --args bin args``
 
@@ -32,7 +32,7 @@ tags: gdb
 清理程序打印,您可能已经注意到，程序打印到屏幕可能会扰乱调试会话的显示，因此要清理打印并重新绘制 TUI，
 
 
-#### 调试相关
+### 调试相关
 ``bt	backtrace``	查看堆栈
 ``` shell
 (gdb) backtrace
@@ -112,8 +112,8 @@ $6 = 20
 
 ``info threads`` 
 
-调试多线程
-如要查看所有线程的回溯，请使用 thread apply all 命令，后跟
+### 调试多线程
+如要查看所有线程的回溯，请使用 ``thread apply all`` 命令，后跟以下
 
 ``info register``　 列出寄存器
 
@@ -125,8 +125,9 @@ $6 = 20
 
 ``info source``   查看当前文件的程序语言
 
-#### 找不到源代码的解决方案
+### 找不到源代码的解决方案
 https://blog.csdn.net/nicholas_duan/article/details/117515155
+
 ``info source``		查看代码路径
 
 ``show dir``
@@ -149,7 +150,7 @@ https://blog.csdn.net/nicholas_duan/article/details/117515155
 - 对于临时查找一个问题，单独调试某一个文件时使用 cd 命令就可以搞定了。
 - 直接在 gdb 环境输入 dir 命令回车确认，可以重置 dir 目录 或者 set dir 目录 命令修改过的源代码搜索目录集合。
 
-#### 移动堆栈
+### 移动堆栈
 bt (or backtrace) will give you a call stack.
 frame <args> will select a frame on the call stack for inspection
 info frame <args> will give you information about a specific frame from the stack. When called without arguments it will display the currently selected frame
@@ -159,11 +160,11 @@ up 1	往外层的堆栈帧移动一层
 down 2  向内层堆栈帧移动二层。如果不指定n，则n默认为1.
 
 
-#### 调试多进程
+### 调试多进程
 set follow-fork-mode child
 
 
-#### 信号
+### 信号
 
 >gdb通常可以捕捉到发送给它的大多数信号，通过捕捉信号，它就可决定对于正在运行的进程要做些什么工作。例如，按CTRL-C将中断信号发送给gdb，通常就会终止gdb。但是你或许不想中断gdb，真正的目的是要中断gdb正在运行的程序，因此，gdb要抓住该信号并停止它正在运行的程序，这样就可以执行某些调试操作。
 
@@ -186,5 +187,5 @@ continuing with signal SIGINT(2)
 ```
 该程序继续执行，但是立即传输该信号，而且处理程序开始运行.
 
-#### 参考
+### 参考
 https://www.gitbook.com/book/wizardforcel/100-gdb-tips
