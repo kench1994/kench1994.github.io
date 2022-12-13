@@ -9,6 +9,25 @@ tags: c/c++
 * content
 {:toc}
 
+## 子进程“继承”与“不继承”的相关内容
+- fork()之后，子进程继承了父进程的几乎全部状态，但也有少数例外
+- 子进程会继承地址空间和文件描述符，因此用于管理动态内存和文件描述符的RAII class都能正常工作
+- 但是子进程不会继承：
+    - 父进程的内存锁，mlock、mlockall
+    - 父进程的文件锁，fcntl
+    - 父进程的某些定时器，setitimer、alarm、timer_create等等
+    - 其他，见man 2 fork
+
+## RAII与fork()的相关注意事项
+
+- 通常我们会用RAII手法来管理以上种类的资源（加锁解锁、创建销毁定时器等等），但是在fork()出来的子进程中不一定正常工作，因为资源在fork()时已经被释放了
+- 比方说用RAII技法封装timer_create()/timer_delete()：
+    - 在子进程中析构函数调用timer_delete()可能会出错，因为试图释放一个不存在的资源
+    - 或者更糟糕地把其他对象持有的timer给释放了（如果碰巧新建的timer_t与之重复的话）
+- 因此，我们在编写服务端程序的时候，“是否允许fork()”是在一开始就应该慎重考虑的问题，在一个没有为fork()做好准备的程序中使用 fork()，会遇到难以预料的问题
+
+
+
 ## 多线程与fork()
 
 - 多线程与fork()的协作性很差。这是POSIX系列操作系统的历史包袱。因为长期以来程序都是单线程的，fork()运转正常。当20世纪90年代初期引入多线程之后，fork()的适用范围大为缩减
@@ -16,8 +35,9 @@ tags: c/c++
 
 ### fork()一般不能在多线程中调用
 - fork()一般不能在多线程程序中调用。可参阅的文章有：
- http://www.linuxprogrammingblog.com/threads-and-fork-think-twice-before-using-them
- http://www.cppblog.com/lymons/archive/2008/06/01/51836.html
+    - http://www.linuxprogrammingblog.com/threads-and-fork-think-twice-before-using-them
+    - http://www.cppblog.com/lymons/archive/2008/06/01/51836.html
+
 - 因为Linux的fork()只克隆当前线程的thread of control，不克隆其他线程。fork()之后，除了当前线程之外，其他线程都消失了。也就是说不能一下子fork()出一个和父进程一样的多线程子进程
 - Linux没有forkall()这样的系统调用，forkall()其实也是很难办的（从语意上），因为其他线程可能等在condition variable上，可能阻塞在系统调用上，可能等着mutex以跨入临界区，还可能在密集的计算中，这些都不好全盘搬到子进程里
 
