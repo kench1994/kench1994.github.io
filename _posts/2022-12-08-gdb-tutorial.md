@@ -19,11 +19,15 @@ tags: gdb
 3.调试已经运行的进程
 ``gdb bin PID``
 （也可以用-p或者--pid指定进程ID，例如：``gdb program -p=10210``）
+
 如果你的程序是一个服务程序，那么你可以指定这个服务程序运行时的进程ID。gdb会自动attach上去，并调试它。program应该在PATH环境变量中搜索到。
+
 ``-q``
 启动时不显示提示信息
+
 ``-tui``			
 也可以按 Ctrl + x 然后按 a 进入 TUI（文本用户界面）模式
+
 ``Ctrl+l``			
 清理程序打印,您可能已经注意到，程序打印到屏幕可能会扰乱调试会话的显示，因此要清理打印并重新绘制 TUI，
 
@@ -40,7 +44,7 @@ tags: gdb
 ```
 
 ``l	list``		查看源码
-``` shell
+``` c++
 gdb) l
 1	int main(int argc, char **argv)
 2	{
@@ -87,35 +91,56 @@ $6 = 20
 ```
 
 ``info break`` 				查看断点信息
+
 ``b	break``				设置断点
+
 ``b 	zx_audio.c: 353``		在zx_audio.c文件的353行加一个断点
+
 ``b	func``				在函数func()入口处。
+
 ``clear <line_number>``		清除断点
+
 ``clear <function_namer>``	清除断点
+
 ``d``						删除所有断点
-``delete 12`` 				根据GDB分配给断点的标识符，@1、@2...等等来删除；
+
+``delete 12`` 				根据GDB分配给断点的标识符，@1、@2...等等来删除
+
 ``whatis a`` 				a的类型
+
 ``ptype a`` 				a类型的结构
 
 ``info threads`` 
+
 调试多线程
 如要查看所有线程的回溯，请使用 thread apply all 命令，后跟
 
 ``info register``　 列出寄存器
+
 ``info frame``　   列出栈帧
+
 ``info files``　　列出当前文件
+
 ``info share``　 列出当前共享库
+
 ``info source``   查看当前文件的程序语言
 
 #### 找不到源代码的解决方案
 https://blog.csdn.net/nicholas_duan/article/details/117515155
 ``info source``		查看代码路径
+
 ``show dir``
+
 ``dir 目录``
+
 ``set dir 目录1:目录2:目录3`` 设置源码目录，会补上默认目录
+
 ``dir``
+
 ``pwd``
+
 ``cd 目录``
+
 ``set substitute-path from-path to-path``
 
 调试的时候找不到源码有多种解决方法，需要根据实际情况选择最合适的解决方案。
@@ -129,6 +154,7 @@ bt (or backtrace) will give you a call stack.
 frame <args> will select a frame on the call stack for inspection
 info frame <args> will give you information about a specific frame from the stack. When called without arguments it will display the currently selected frame
 info locals can give you information about any local variables on the stack.
+
 up 1	往外层的堆栈帧移动一层
 down 2  向内层堆栈帧移动二层。如果不指定n，则n默认为1.
 
