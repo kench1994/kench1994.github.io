@@ -2,7 +2,7 @@
 layout: post
 title: "TCP的四次挥手"
 date: 2022-08-27 02:29:44
-categories: program
+categories: network
 tags: network
 ---
 
