@@ -10,8 +10,10 @@ tags: c/c++
 {:toc}
 
 ## 多线程与fork()
+
 - 多线程与fork()的协作性很差。这是POSIX系列操作系统的历史包袱。因为长期以来程序都是单线程的，fork()运转正常。当20世纪90年代初期引入多线程之后，fork()的适用范围大为缩减
 - 在现代Linux glibc中，fork(3)不是直接使用fork(2)系统调用，而是使用clone(2) syscall，不过不影响这里的讨论
+
 ### fork()一般不能在多线程中调用
 - fork()一般不能在多线程程序中调用。可参阅的文章有：
  http://www.linuxprogrammingblog.com/threads-and-fork-think-twice-before-using-them
