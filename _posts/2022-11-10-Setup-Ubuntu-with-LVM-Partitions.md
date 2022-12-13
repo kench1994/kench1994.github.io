@@ -9,9 +9,11 @@ tags: linux
 * content
 {:toc}
 
-PV 物理卷   /dev/hdaX
-VG 卷组     /dev/ (通常是个目录)
-LV 逻辑卷   /dev/
+- **PV 物理卷（physical volume）**：LVM 的基本存储逻辑块。创建物理卷它可以用硬盘分区，也可以用硬盘本身
+- **VG 卷组（Volume Group）**：一个 LVM 卷组由一个或多个物理卷组成。
+- **LV 逻辑卷（logical volume）**：LV 建立在VG之上，可以在 LV 之上建立文件系统 
+
+![lvm](/assets/lvm.png)
 
 https://help.ubuntu.com/community/UbuntuDesktopLVM
 
