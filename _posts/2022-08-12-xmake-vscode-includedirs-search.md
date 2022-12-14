@@ -2,8 +2,8 @@
 layout: post
 title: "vscode xmake工程头文件跳转"
 date: 2022-08-11 09:12:34
-categories: program
-tags: openssl
+categories: vsscode
+tags: vsscode
 ---
 
 * content

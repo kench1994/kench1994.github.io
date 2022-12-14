@@ -2,7 +2,7 @@
 layout: post
 title: "rpm拉取package方法"
 date: 2021-12-30 22:19:13
-categories: program
+categories: linux
 tags: linux
 ---
 
