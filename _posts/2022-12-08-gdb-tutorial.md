@@ -112,6 +112,27 @@ $6 = 20
 
 ``info threads`` 
 
+
+### 打印内存
+gdb中使用“x”命令来打印内存的值，格式为“x/nfu addr”。含义为以f格式打印从addr开始的n个长度单元为u的内存值。参数具体含义如下：
+a）n：输出单元的个数。
+b）f：是输出格式。比如x是以16进制形式输出，o是以8进制形式输出,等等。
+c）u：标明一个单元的长度。b是一个byte，h是两个byte（halfword），w是四个byte（word），g是八个byte（giant word）。
+
+- （1） 以16进制格式打印数组前a16个byte的值：
+``` shell
+(gdb) x/16xb a
+0x7fffffffe4a0: 0x00    0x01    0x02    0x03    0x04    0x05    0x06    0x07
+0x7fffffffe4a8: 0x08    0x09    0x0a    0x0b    0x0c    0x0d    0x0e    0x0f
+```
+- （2） 以无符号10进制格式打印数组a前16个byte的值：
+
+``` shell
+(gdb) x/16ub a
+0x7fffffffe4a0: 0       1       2       3       4       5       6       7
+0x7fffffffe4a8: 8       9       10      11      12      13      14      15
+```
+
 ### 调试多线程
 如要查看所有线程的回溯，请使用 ``thread apply all`` 命令，后跟以下
 
@@ -190,3 +211,6 @@ continuing with signal SIGINT(2)
 
 ### 参考
 https://www.gitbook.com/book/wizardforcel/100-gdb-tips
+https://blog.csdn.net/weixin_30644369/article/details/99661862
+https://blog.csdn.net/Luckiers/article/details/124568399
+https://blog.csdn.net/qq_36393978/article/details/124711483
