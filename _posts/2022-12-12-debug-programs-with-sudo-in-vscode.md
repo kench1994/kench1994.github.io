@@ -17,6 +17,12 @@ tags: vscode
 sudo /usr/bin/gdb "$@"
 ```
 - make it executable
+- 修改 sudoer 配置，未用户设置gdb免密码
+``` json
+    ## Allows people in group wheel to run all commands
+    %wheel  ALL=(ALL)       ALL
+    rhel ALL=(ALL) NOPASSWD:/usr/bin/gdb
+```
 - modify the launch.json in VSCode to call the script (obviously change username accordingly) by adding "miDebuggerPath":
 ``` json
 ...
