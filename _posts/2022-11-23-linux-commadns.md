@@ -60,6 +60,34 @@ T：根据时间/累计时间进行排序；
 w：将当前设置写入~/.toprc文件中。
  ```
 
+### **ps**
+报告当前系统的进程状态
+
+- 选项
+``` 
+a：显示一个终端的所有进程，除会话引线外；
+u：显示进程的归属用户及内存的使用情况；
+x：显示没有控制终端的进程；
+-l：长格式显示更加详细的信息；
+-e：显示所有进程；
+-f：显示UID,PPIP,C与STIME栏位。
+f：用ASCII字符显示树状结构，表达程序间的相互关系。
+ ```
+
+- 实例
+```
+ps aux | sort -rnk 4 # 按内存资源的使用量对进程进行排序
+ps aux | sort -nk 3  # 按 CPU 资源的使用量对进程进行排序
+ps -efL # 查看线程数
+ps -e -o "%C : %p :%z : %a"|sort -k5 -nr # 查看进程并按内存使用大小排列
+ps -ef | grep ssh # ps 与grep 常用组合用法，查找特定进程
+ps -C nginx # 通过名字或命令搜索进程
+ps aux --sort=-pcpu,+pmem # CPU或者内存进行排序,-降序，+升序
+ps -f --forest -C nginx # 用树的风格显示进程的层次关系
+ps -o pid,uname,comm -C nginx # 显示一个父进程的子进程
+ps -aux | grep named # 查看named进程详细信息
+ ```
+
 ### **netstat**
 用来打印Linux中网络系统的状态信息，可让你得知整个Linux系统的网络情况。
 
