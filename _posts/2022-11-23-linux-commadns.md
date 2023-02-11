@@ -404,3 +404,34 @@ $readelf -S Shpos.o | grep debug
 	
 	退出：
 		 q：quit
+
+
+### **在文件夹所有文件中查找相关内容**
+
+``grep -nr "str" path``
+
+**参数说明**
+
+``` shell
+grep: 就是grep命令
+-nr: n是line number行号，r是recursive，可以理解为遍历文件文件夹
+"str": 双引号里面的str就是要查找的内容，用双引号何以使用空格和一些字符进行查找
+path: path就是查找路径，默认是./，也就是当前目录开始，也可以手动指定目录
+ ```
+
+**限定查找的文件条件**
+``find path -name "PATTEN" | xargs grep -n "str" | grep "str"``
+
+### **tcpdump**
+
+#### 抓取主机为192.168.1.1，网卡为eth0的流量
+``tcpdump host 192.168.1.1 -i eth0 -v``
+
+#### 抓取源主机为192.168.1.1，网卡为eth0的流量
+``tcpdump src host 192.168.1.1  -i eth0 -v``
+
+#### 抓取源主机为192.168.1.1，网卡为eth0的流量，将其保存为pcap
+``tcpdump src host 192.168.20.237  -i eth0 -v -w ./target.cap``
+
+#### 抓取排除ssh
+``tcpdump -i eth2 port not 22``
