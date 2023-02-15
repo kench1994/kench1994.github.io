@@ -8,7 +8,9 @@ tags: linux
 
 * content
 {:toc}
-
+``` shell
 [user@host lib]$ readelf -d libMyLib1.so | grep TEXT   # Bad, not -fPIC
  0x00000016 (TEXTREL)
+ 
 [user@host lib]$ readelf -d libMyLib2.so | grep TEXT   # Good, -fPIC
+```
