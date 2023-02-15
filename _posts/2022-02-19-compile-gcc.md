@@ -9,7 +9,7 @@ tags: gcc
 * content
 {:toc}
 
-```
+``` shell
 # 下载gcc源码包
 wget https://ftp.gnu.org/gnu/gcc/gcc-7.5.0/gcc-7.5.0.tar.gz
 
@@ -34,6 +34,9 @@ wget ftp://gcc.gnu.org/pub/gcc/infrastructure/isl-0.16.1.tar.bz2
 ftp://gcc.gnu.org/pub/gcc/infrastructure/
 # 替换为
 http://www.mirrorservice.org/sites/sourceware.org/pub/gcc/infrastructure/
+
+# vim 中使用
+%s#gcc.gnu.org/pub/gcc/infrastructure#www.mirrorservice.org/sites/sourceware.org/pub/gcc/infrastructure#g
 
 # 建立输出目录，用于存放编译时所有产生的中间文件
 mkdir build
