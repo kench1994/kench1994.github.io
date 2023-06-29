@@ -180,3 +180,26 @@ ThreadPool_noWorkSteal    3123980502 ns
 ThreadPool_withWorkSteal   831945141 ns
 ```
 worksteal线程池性能提升了3x以上，性能提升还是挺明显的
+
+
+#### 备忘一下
+和我自己设计的线程池很大一个差别就是任务存放在多个队列，我一般是直接但多队列(生产者) 多消费者
+而 simple_async 在调度时会让用户层指定一个id，id会通过取余的方案让固定线程去调度，在通信或者有序队列中非常有用
+
+任务在标记可 work_steal 后 worker进程会优先进行 worksteal
+
+这种方案稍微有点简单粗暴，后续可确认下是否合适
+
+同时对于 cpu 亲和性的考量、上层构筑兼容timer（类似workflow）也是我后需要完善的
+
+还有 workflow 这样前置声明的方式
+``` c
+struct WFGlobalSettings settings = GLOBAL_SETTINGS_DEFAULT;
+settings.compute_threads = 16;
+WORKFLOW_library_init(&settings);
+```
+
+最后我还要对比下是否有必要使用虚函数方案，现在是感觉不大需要
+经理那个定时调度任务是因为需要对象组织成链式
+
+但我这边用不上functor方案本来就管理不了声明周期, 所以还不如c函数让用户自行管理
