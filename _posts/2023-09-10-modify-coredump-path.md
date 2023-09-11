@@ -9,4 +9,4 @@ tags: coredump
 * content
 {:toc}
 
-echo "%e-%p-%t.core" | sudo tee /proc/sys/kernel/core_pattern
+``echo "%e-%p-%t.core" | sudo tee /proc/sys/kernel/core_pattern``
