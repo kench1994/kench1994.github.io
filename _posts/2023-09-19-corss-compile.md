@@ -59,3 +59,10 @@ cmake -S $module -B build -DCMAKE_TOOLCHAIN_FILE=.aarch64_toolchain.cmake
 cmake --build build
 rm -rf ./build
 ```
+
+```
+	-DCMAKE_C_COMPILER=$CMAKE_C_COMPILER \
+	-DCMAKE_CXX_COMPILER=$CMAKE_CXX_COMPILER \
+	-DCMAKE_AR=$CMAKE_AR \
+	-DCMAKE_FIND_ROOT_PATH=$CMAKE_FIND_ROOT_PATH
+```
