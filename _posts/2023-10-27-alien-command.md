@@ -15,3 +15,6 @@ tags: linux
 
 **[警告]**
 >不应该用 alien(1) 来替代必要的系统软件包，例如 sysvinit、libc6、libpam-modules 等等。实际上，alien(1) 应该只用于 non-free 中仅提供二进制文件的软件包，并且它们应该兼容 LSB 或被静态链接。对于自由软件，你应该使用它们的源软件包来制作一个真正的 Debian 软件包。
+
+
+使用示例：``sudo alien --scripts -i ob-deploy-x.x.x.el7.x86_64.rpm``
