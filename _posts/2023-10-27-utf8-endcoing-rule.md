@@ -29,6 +29,8 @@ UTF-8的编码规则.
 注意这个编码的起始编码是表示的是: U+0080 ,
 展示说: 0x0080 这个code point被编码到: 1100 0010, 1000 0000, 结束编码的空间为: U+07FF
 
+https://zhuanlan.zhihu.com/p/520526723
+
 
 代码示例:
 ``` c++
@@ -87,4 +89,24 @@ inline RuneStrLite DecodeRuneInString(const char* str, size_t len) {
   }
   return rp;
 }
+```
+
+
+> 扩展
+
+微软很多组件把 UTF-16 LE （或 UTF-16 ）叫做 Unicode ，应该是个历史非常久远的错误。
+Unicode 不是单个编码，只有提 UTF-8/16/32 编码的字节数才有意义。
+
+BMP 中的汉字（**常用**汉字都在这里面）
+``` shell
+UTF-8 3 字节
+UTF-16 2 字节
+UTF-32 4 字节
+```
+
+BMP 外的汉字
+``` shell
+UTF-8 4 字节
+UTF-16 4 字节
+UTF-32 4 字节
 ```
