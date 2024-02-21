@@ -11,8 +11,9 @@ tags: docker
 
 
 #### 基础术语
+
 名词 | 释义
-| :----- | :-------| 
+| :-- | :-- | 
 **寄存服务(registry)** | 负责托管和发布镜像的服务，默认为Docker Hub
 **镜像(image)** | 镜像的概念更多偏向于一个环境包，这个环境包可以移动到任意的Docker平台中去运行。你也可以认为镜像与你装载操作系统iso镜像是一个概念
 **容器(container)** | 容器是镜像运行时的实体（类似于面向对象中类的实例）。容器可以被创建、启动、停止、删除、暂停等。
@@ -54,7 +55,8 @@ sudo systemctl enable docker
 #### Docker 常用命令
 > Docker 客户端非常简单，我们可以直接输入 ``docker`` 命令来查看到 Docker 客户端的所有命令选项。
 或者输入 ``docker COMMAND --help `` 来获取指定command更详细的帮助。比如：
- ```shell
+
+ ``` shell
 $ docker images --help
 
 Usage:  docker images [OPTIONS] [REPOSITORY[:TAG]]
@@ -71,15 +73,14 @@ Options:
 #### 获取基础镜像
 我们可以通过[Docker Hub](https://hub.docker.com/)搜索我们所需要的基础镜像，并拉取到本地，通常拉取docker官方提供的基础镜像。
 
- ```shell
-docker pull mysql
- ```
+`` docker pull mysql ``
+
 或者拉去指定版本的镜像
- ```shell
-docker pull mysql:5.7
- ```
-> 如果不指定```:```后的 ```tag```，直接拉取的就是```latest```的版本(确实存在```latest标签```镜像的时候，否则报错)。
-> 很多仓库都会把 ```latest ```标签作为最新的稳定版本镜像别名，但这不过是一个惯例，而非严格标准
+
+`` docker pull mysql:5.7 ``
+
+> 如果不指定 ``:`` 后的 ``tag``，直接拉取的就是 ``latest`` 的版本(确实存在 ``latest标签`` 镜像的时候，否则报错)。
+> 很多仓库都会把 ``latest `` 标签作为最新的稳定版本镜像别名，但这不过是一个惯例，而非严格标准
 
 #### 启动容器
 以下命令使用 mysql 镜像启动一个容器，参数为以命令行模式进入该容器：
@@ -103,7 +104,7 @@ docker run \
 - --name hellomysql 设定容器实例名为hellomysql，非必要参数
 - mysql:5.7: mysql:5.7 镜像。如果镜像不存在于本地仓库，会先行尝试从docker hub进行拉取。
 - -p <IP><宿主机端口>:<容器端口> 映射宿主机端口和容器端口
-- -v <宿主机目录>:<容器目录><权限(ro/rw)> 将宿主机目录挂载到容器里，比如将容器内 ```mysql``` 默认数据路径 ```/var/lib/mysql``` 持久化到本地 ```/opt/mysql/data```
+- -v <宿主机目录>:<容器目录><权限(ro/rw)> 将宿主机目录挂载到容器里，比如将容器内 mysql 默认数据路径 /var/lib/mysql 持久化到本地 /opt/mysql/data
 - -e 设置容器的环境变量
 - --network=host 使用宿主机网路
 - --dns=8.8.8.8 设置dns
@@ -699,7 +700,26 @@ $sysctl -w net.ipv4.ip_forward=1
 
 
 #### 使用 ``Docker Compose`` 编排镜像
-``Docker Compose``旨在迅速建立和运行Docker开发环境。大体上，它使用YAML文件来存储不同容器的配置, 节省开发者重复且容易出错的输入，以及避免了自行开发解决方案的负担。当你的应用开始变得复杂时，它就能发挥所长了。Compose将使我们免于自己维护用于服务编排的脚本，包招启动、 连接、更新和停止容器。``docker-compose.yml：``
+``Docker Compose``旨在迅速建立和运行Docker开发环境。大体上，它使用YAML文件来存储不同容器的配置, 节省开发者重复且容易出错的输入，以及避免了自行开发解决方案的负担。当你的应用开始变得复杂时，它就能发挥所长了。Compose将使我们免于自己维护用于服务编排的脚本，包招启动、 连接、更新和停止容器。
+
+**安装**
+
+``` shell 
+sudo curl -L "https://github.com/docker/compose/releases/download/v2.2.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose``
+#要安装其他版本的 Compose，请替换 v2.2.2。
+
+#将可执行权限应用于二进制文件：
+$ sudo chmod +x /usr/local/bin/docker-compose
+
+#创建软链：
+$ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+
+#测试是否安装成功：
+$ docker-compose version
+cker-compose version 1.24.1, build 4667896b
+```
+
+**docker-compose.yml：**
 ``` yml
 version: '3'
 services:
@@ -724,18 +744,25 @@ services:
  ```
  
 **基础指令**
+
 ``up``
 启动所有在Compose 文件中定义的容器，并且把它们的日志信息汇集一起，通常会使用-d参数使Compose 在后台运行。
+
 ``build``
 重新建造由 Dockertile 构建的镜像，除非镜像不在在，否则中命令不会技行构建的动作，因此需要更新镜像时便使用这个命令。
+
 ``ps``
 获取由Compose 管理的容器的状态信息。
+
 ``run``
 启动一个容器，并运行一个一次性的命令。被连接的容器会同时启动，除非用了-deps参数。
+
 ``logs``
 汇集由Compose 管理的容器的日志，并以彩色输出。
+
 ``down``
 停止容器，但不会删除它们。
+
 ``rm``
 删除已停止的容器。不要忘记使用-v参数来删除任何由 Docker 管理的数据卷
 
