@@ -7,8 +7,8 @@ services:
       - "4000:4000"
     network_mode: "host"
     volumes:
-      - $PWD:/srv/jekyll
-      - $PWD/vendor/bundle:/usr/local/bundle
+      - .:/srv/jekyll
+      - ./vendor/bundle:/usr/local/bundle
     command: ["jekyll", "serve"]
 
 # sudo docker run -d \

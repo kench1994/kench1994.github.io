@@ -295,22 +295,29 @@ HEALTHCHECK | 健康检查
 - 比如 ``<源路径> ``可以是一个 URL，这种情况下，Docker 引擎会试图去下载这个链接的文件放到 <目标路径> 去。下载后的文件权限自动设置为 600，如果这并不是想要的权限，那么还需要增加额外的一层 RUN 进行权限调整，另外，如果下载的是个压缩包，需要解压缩，也一样还需要额外的一层 RUN 指令进行解压缩。所以不如直接使用 RUN 指令，然后使用 wget 或者 curl 工具下载，处理权限、解压缩、然后清理无用文件更合理。因此，这个功能其实并不实用，而且不推荐使用。
 - 如果 ``<源路径> ``为一个 tar 压缩文件的话，压缩格式为 gzip, bzip2 以及 xz 的情况下，ADD 指令将会自动解压缩这个压缩文件到 <目标路径> 去。
 在某些情况下，这个自动解压缩的功能非常有用，比如官方镜像 ubuntu 中：
- ```Dockerfile
+ ``` Dockerfile
 FROM scratch
 ADD ubuntu-xenial-core-cloudimg-amd64-root.tar.gz /
- ```
+```
+
 - 对于目录而言，```COPY ```和 ```ADD ```命令具有相同的特点：只复制目录中的内容而不包含目录自身
 - 如果文件名中含有空格，需要使用双引号将文件名包裹```COPY "test space.txt" /home/opt/Program Files```
 - ENTRYPOINT有两种形式，executable与shell，如下：
-``` Dockerfile
+
+ ``` Dockerfile
 ENTRYPOINT ["executable"] : executable form
 ENTRYPOINT executable : shell form
- ```
+
+```
+
 - CMD指令也有两种使用方式：
-``` Dockerfile
+
+ ``` Dockerfile
 CMD ["command", "param1"] ：exec Form，推荐方式
 CMD command param1 ： shell Form
+
 ``` 
+
 - HEALTHCHECK 支持下列选项：
 --interval=<间隔>：两次健康检查的间隔，默认为 30 秒；
 --timeout=<时长>：健康检查命令运行超时时间，如果超过这个时间，本次健康检查就被视为失败，默认 30 秒；
@@ -328,7 +335,7 @@ DockerImage
 ├── bin
 │   └── hello.sh
 └── Dockerfile
- ```
+```
 
  ``` shell 
 $cat hello.sh
@@ -337,7 +344,7 @@ while true; then do
     echo 'Hello Docker!'
     sleep 3s
 done
- ```
+```
 
  ```Dockerfile
 $cat Dockerfile 
@@ -355,7 +362,9 @@ USER root
 WORKDIR /opt/tipray/docker/
 ENTRYPOINT ["hello.sh"]
  ```
+
 - 执行``docker build ``
+
 ``` shell
 $ docker build -t tipray/hello:0.1 . 
 Sending build context to Docker daemon  5.632kB
@@ -371,7 +380,8 @@ Step 4/7 : RUN apk add --no-cache tzdata     && cp /usr/share/zoneinfo/Asia/Shan
 Successfully built e957faa29720
 Successfully tagged tipray/hello:0.1
 ......
- ```
+```
+
 **``docker build``参数说明**：
 -t ：指定要创建的目标镜像名[**一般可以按照这样的规范标识，(dockerhub)用户名/镜像名:标签名(tag)**]
 . ：Dockerfile 文件所在目录
@@ -379,12 +389,14 @@ Successfully tagged tipray/hello:0.1
 
 #### 镜像制作的扩展技巧
 - 使用``.dockerignore ``排除环境中不需要的文件，用法和``.gitignore``相同，支持正则表达式
+
  ```gitignore
 .git
 */.git
 .svn
 .vscode
- ```
+
+```
 
 
 - 类似于Git 会保存每一次提交的文件版本，在 Dockerfile 中,每一条指令都会创建一个镜像层，继而会增加整体镜像的大小。尽可能合并指令以减少中间镜像层
@@ -396,7 +408,7 @@ RUN apk add --no-cache tzdata \
     && echo "Asia/Shanghai" > /etc/timezone \
     && apk del tzdata
  ...
- ```
+```
 
 - 复制文件的同时修改元信息```COPY --chmod=755 --chown=normal:normal output/hello /usr/bin/hello```。使用前需要开启 docker 的 buildkit 特性（在 docker build 命令前添加 DOCKER_BUILDKIT=1 即可），目前只支持 --chmod=755 和 --chmod=0755 这种设置方法，不支持 --chmod=+x
 
@@ -428,7 +440,7 @@ IMAGE          CREATED         CREATED BY                                      S
 
 
 
-- 使用第三方工具dive分析镜像层组成，并列出每个镜像层所包含的文件列表，可以很方便地定位到影响镜像体积的构建指令以及具体文件```dive golang:1.16 ```
+- 使用第三方工具dive分析镜像层组成，并列出每个镜像层所包含的文件列表，可以很方便地定位到影响镜像体积的构建指令以及具体文件``dive golang:1.16 ``
 
 
 
@@ -445,7 +457,8 @@ IMAGE          CREATED        CREATED BY                                      SI
 <missing>      11 hours ago   /bin/sh -c #(nop) COPY file:66065d6e23e0bc52…   0B
 <missing>      7 weeks ago    /bin/sh -c #(nop)  CMD ["/bin/sh"]              0B
 <missing>      7 weeks ago    /bin/sh -c #(nop) ADD file:8e81116368669ed3d…   5.53MB
- ```
+```
+
 这种做法的坏处在于，镜像在保存和分发时是可以复用镜像层的，推送镜像时会跳过镜像仓库已存在的镜像层，拉取镜像时会跳过本地已拉取过的镜像层，而合并成一层后则失去了这种优势。
 
 
@@ -475,7 +488,7 @@ FROM 8eaa4ff06b53
 RUN echo "Build form image id" > /etc/buildinfo
 RUN echo "8eaa4ff06b53" >> /etc/buildinfo
 CMD ["cat", "/etc/buildinfo"]
- ```
+```
 
 - 一个容器对应一个应用，甚至进程
 容器本身的设计，就是希望容器和服务/应用能够具备相同的生命周期。
@@ -486,6 +499,7 @@ CMD ["cat", "/etc/buildinfo"]
 
 #### 调试镜像层
 > 很多时候，刚接触Docker的用户都会被镜像生成的过程难倒。Dockerfile 中的每个指令执行后都会产生一个新的统像层，而这个镜像层其实可以用来启动容器。 一个新的镜像层的建立，是用上一层的镜像启动容器，然后执行Dockerfile的指令后，把它保存为一个新的镜像。 当Dockerfile指令成功执行后，中间使用过的那个容器会被删掉，除非提供了 ``-rm=false ``或 ``--squash `` 等参数
+
 通过``docker history``查看组成镜像的所有层，当构建失败时，可以把失败前的那个层启动起来。
  ```shell
  ..
@@ -497,7 +511,7 @@ Removing intermediate container 1e7bf37d08da
 Successfully built 854f279eb679
 Successfully tagged tipray/hello:0.1
 /bin/sh: ENTRYPOINT: not found
-# 这边是run失败了,查看镜像层
+#这边是run失败了,查看镜像层
 $docker history tipray/hello:0.1
 IMAGE          CREATED                  CREATED BY                                      SIZE      COMMENT
 854f279eb679   Less than a second ago   /bin/sh -c #(nop)  CMD ["/bin/sh" "-c" "ENTR…   0B        
@@ -508,7 +522,6 @@ db59f09c9771   1 second ago             /bin/sh -c #(nop)  USER root            
 05ea6c781a47   3 seconds ago            /bin/sh -c #(nop)  LABEL maintainer=huangc b…   0B        
 d7d3d98c851f   2 weeks ago              /bin/sh -c #(nop)  CMD ["/bin/sh"]              0B        
 <missing>      2 weeks ago              /bin/sh -c #(nop) ADD file:a2648378045615c37…   5.53MB    
-
 #进入entrypoint前的一个镜像层
 $ docker run -it --name debug 043b0f212924
 
@@ -517,7 +530,8 @@ $ docker run -it --name debug 043b0f212924
 hello.sh
 /opt/tipray/docker # sh hello.sh
 hello.sh: line 1: syntax error: unexpected "then" (expecting "do")
- ```
+```
+
 可以看出，我们通过进入镜像层调试模拟脚本执行发现实际上问题是脚本语法问题。
 
 #### 镜像构建缓存
@@ -542,8 +556,9 @@ apprval
     ├── TRWfe
     ├── Readme.md
     └── VERSION
- ```
-``` shell
+```
+
+ ``` shell
 $ cat init.sh
 PRODUCT_SERI="my"
 PROD="apprval"
@@ -560,7 +575,8 @@ docker run -d \
     --name $PRDO \
     $TAG
 ```
-``` shell
+
+ ``` shell
 $cat rm.sh
 PRODUCT_SERI="my"
 PROD="mysql"
@@ -592,11 +608,12 @@ if [ "$cnt" -gt 0 ]; then
     done
 fi
 sudo docker rmi $(sudo docker images --filter "dangling=true" -q --no-trunc)
- ```
+```
 
 #### 导出/导入镜像
 - 导出
-``` shell
+
+ ``` shell
 $ cat pack.sh
 PRODUCT_SERI="my"
 PROD="apprval"
@@ -608,16 +625,17 @@ sudo docker save "$TAG" > "../$PRODUCT_SERI-$PROD-$VERSION.tar"
 sudo gzip "../$PRODUCT_SERI-$PROD-$VERSION.tar"
 sudo chmod a+rw "../$PRODUCT_SERI-$PROD-$VERSION.tar.gz"
 sudo rm "../$PRODUCT_SERI-$PROD-$VERSION.tar"
- ```
-- 导入
 ```
+
+- 导入
+
+``` shell
 docker load -i my/apprval:0.1.tar.gz
 ```
+
 **更优的实践：通过公司内自建寄存服务（regesity）内部分发镜像**
 
-^
-^
-###
+
 #### 数据持久化
 
 
@@ -636,12 +654,14 @@ docker load -i my/apprval:0.1.tar.gz
 ``` shell
 $ docker volume create my-vol
 ```
+
 - 查看所有数据卷
 ``` shell
 $ docker volume ls
 DRIVER              VOLUME NAME
 local               my-vol
 ```
+
 - 启动一个挂载数据卷的容器
 在用 ``docker run`` 命令的时候，使用 --mount 标记来将 数据卷 挂载到容器里。在一次 docker run 中可以挂载多个 数据卷。
 下面创建一个名为 web 的容器，并加载一个 数据卷 到容器的 /usr/share/nginx/html 目录。
@@ -664,14 +684,17 @@ $ docker volume prun
 
 #### 容器访问外部网络
 容器要想访问外部网络，需要本地系统的转发支持。在Linux 系统中，检查转发是否打开。
+
 ``` shell   
 $sysctl net.ipv4.ip_forward
 net.ipv4.ip_forward = 1
  ```
+
 如果为 0，说明没有开启转发，则需要手动打开。
 ``` shell
 $sysctl -w net.ipv4.ip_forward=1
  ```
+
 如果在启动 Docker 服务的时候设定 --ip-forward=true, Docker 就会自动设定系统的 ip_forward 参数为 1
 
 
@@ -699,6 +722,7 @@ services:
     depends_on:
       - my-mysql
  ```
+ 
 **基础指令**
 ``up``
 启动所有在Compose 文件中定义的容器，并且把它们的日志信息汇集一起，通常会使用-d参数使Compose 在后台运行。
