@@ -386,6 +386,7 @@ Successfully tagged tipray/hello:0.1
 .vscode
  ```
 ### 
+
 - 类似于Git 会保存每一次提交的文件版本，在 Dockerfile 中,每一条指令都会创建一个镜像层，继而会增加整体镜像的大小。尽可能合并指令以减少中间镜像层
 ``` Dockerfile
 Dockerfile
@@ -398,7 +399,9 @@ RUN apk add --no-cache tzdata \
  ```
 ### 
 - 复制文件的同时修改元信息```COPY --chmod=755 --chown=normal:normal output/hello /usr/bin/hello```。使用前需要开启 docker 的 buildkit 特性（在 docker build 命令前添加 DOCKER_BUILDKIT=1 即可），目前只支持 --chmod=755 和 --chmod=0755 这种设置方法，不支持 --chmod=+x
-#### 
+
+### 
+
 - **及时清理不需要的文件**，运行容器时不需要的文件，一定要在创建的同一层清理，否则依然会保留在最终的镜像中。
  ``` Dockerfile
 RUN apt-get update \
@@ -408,6 +411,7 @@ RUN apt-get update \
  ```
 ### 
 - 使用 Docker 自带的 ```docker history ```命令，分析所有镜像层的创建时间、指令以及体积等较为基础的信息
+
  ```shell
 $docker history tipray/hello:0.1
 IMAGE          CREATED         CREATED BY                                      SIZE      COMMENT
@@ -420,8 +424,10 @@ IMAGE          CREATED         CREATED BY                                      S
 <missing>      2 minutes ago   /bin/sh -c #(nop)  LABEL maintainer=huangc b…   0B        
 <missing>      2 weeks ago     /bin/sh -c #(nop)  CMD ["/bin/sh"]              0B        
 <missing>      2 weeks ago     /bin/sh -c #(nop) ADD file:a2648378045615c37…   5.53MB    
- ```
-#### 
+```
+
+### 
+
 - 使用第三方工具dive分析镜像层组成，并列出每个镜像层所包含的文件列表，可以很方便地定位到影响镜像体积的构建指令以及具体文件```dive golang:1.16 ```
 
 
@@ -445,7 +451,9 @@ IMAGE          CREATED        CREATED BY                                      SI
 
 - 修改镜像时区
 [Dockerfile设置默认时区](https://blog.51cto.com/cuiyingfeng/4371774)
-#### 
+
+### 
+
 
 - 不要再镜像中存储密钥信息
 虽然这可能是做简单的方法，但它意味着任何能够获取镜像的敌人都能获取你的密钥。
@@ -609,6 +617,8 @@ docker load -i my/apprval:0.1.tar.gz
 ```
 **更优的实践：通过公司内自建寄存服务（regesity）内部分发镜像**
 
+^
+^
 ###
 #### 数据持久化
 
