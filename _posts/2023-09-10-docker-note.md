@@ -385,7 +385,7 @@ Successfully tagged tipray/hello:0.1
 .svn
 .vscode
  ```
-### 
+
 
 - 类似于Git 会保存每一次提交的文件版本，在 Dockerfile 中,每一条指令都会创建一个镜像层，继而会增加整体镜像的大小。尽可能合并指令以减少中间镜像层
 ``` Dockerfile
@@ -397,10 +397,10 @@ RUN apk add --no-cache tzdata \
     && apk del tzdata
  ...
  ```
-### 
+
 - 复制文件的同时修改元信息```COPY --chmod=755 --chown=normal:normal output/hello /usr/bin/hello```。使用前需要开启 docker 的 buildkit 特性（在 docker build 命令前添加 DOCKER_BUILDKIT=1 即可），目前只支持 --chmod=755 和 --chmod=0755 这种设置方法，不支持 --chmod=+x
 
-### 
+
 
 - **及时清理不需要的文件**，运行容器时不需要的文件，一定要在创建的同一层清理，否则依然会保留在最终的镜像中。
  ``` Dockerfile
@@ -409,7 +409,7 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
  # 官方的 ubuntu/debian 镜像 apt-get 会在安装后自动执行 clean 命令
  ```
-### 
+
 - 使用 Docker 自带的 ```docker history ```命令，分析所有镜像层的创建时间、指令以及体积等较为基础的信息
 
  ```shell
@@ -426,12 +426,12 @@ IMAGE          CREATED         CREATED BY                                      S
 <missing>      2 weeks ago     /bin/sh -c #(nop) ADD file:a2648378045615c37…   5.53MB    
 ```
 
-### 
+
 
 - 使用第三方工具dive分析镜像层组成，并列出每个镜像层所包含的文件列表，可以很方便地定位到影响镜像体积的构建指令以及具体文件```dive golang:1.16 ```
 
 
-### 
+
 #### 合并多个镜像层
 当构建的层数很多且执行指令较复杂时，可通过 ```docker build``` 命令中添加 ```—squash``` 参数在最终生成镜像时将所有镜像层合并成一层Dockerfile：
 ``` shell
@@ -452,7 +452,7 @@ IMAGE          CREATED        CREATED BY                                      SI
 - 修改镜像时区
 [Dockerfile设置默认时区](https://blog.51cto.com/cuiyingfeng/4371774)
 
-### 
+
 
 
 - 不要再镜像中存储密钥信息
@@ -476,19 +476,19 @@ RUN echo "Build form image id" > /etc/buildinfo
 RUN echo "8eaa4ff06b53" >> /etc/buildinfo
 CMD ["cat", "/etc/buildinfo"]
  ```
-### 
+
 - 一个容器对应一个应用，甚至进程
 容器本身的设计，就是希望容器和服务/应用能够具备相同的生命周期。
 出现故障时开发人员能方便地对该故障容器进行问题排查，而不必对整个系统的各个部分进行排查，这也使得其更具有可移植性和可预测性。
 升级程序时能够将影响范围控制再更小的粒度，极大增加应用程序生命周期管理的灵活性，避免在升级某个服务时中断相同容器中的其他进程。
-### 
+
 - 让业务进程的pid保持为1：如果业务进程可以在CMD中启动，则使用executable模式；如果必须放在shell脚本中启动，则在业务进程的启动命令前加上exec关键字使其pid保持为1
 
 #### 调试镜像层
 > 很多时候，刚接触Docker的用户都会被镜像生成的过程难倒。Dockerfile 中的每个指令执行后都会产生一个新的统像层，而这个镜像层其实可以用来启动容器。 一个新的镜像层的建立，是用上一层的镜像启动容器，然后执行Dockerfile的指令后，把它保存为一个新的镜像。 当Dockerfile指令成功执行后，中间使用过的那个容器会被删掉，除非提供了 ``-rm=false ``或 ``--squash `` 等参数
 通过``docker history``查看组成镜像的所有层，当构建失败时，可以把失败前的那个层启动起来。
  ```shell
- ....
+ ..
  ---> 043b0f212924
 Step 7/7 : CMD ENTRYPOINT ["sh", "hello.sh"]
  ---> Running in 1e7bf37d08da
@@ -497,9 +497,7 @@ Removing intermediate container 1e7bf37d08da
 Successfully built 854f279eb679
 Successfully tagged tipray/hello:0.1
 /bin/sh: ENTRYPOINT: not found
-
-#这边是run失败了,查看镜像层
-
+# 这边是run失败了,查看镜像层
 $docker history tipray/hello:0.1
 IMAGE          CREATED                  CREATED BY                                      SIZE      COMMENT
 854f279eb679   Less than a second ago   /bin/sh -c #(nop)  CMD ["/bin/sh" "-c" "ENTR…   0B        
