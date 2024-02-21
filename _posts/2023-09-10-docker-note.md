@@ -52,8 +52,8 @@ sudo systemctl enable docker
 
 
 #### Docker 常用命令
-> Docker 客户端非常简单 ,我们可以直接输入 ```docker``` 命令来查看到 Docker 客户端的所有命令选项。
-或者输入 ```docker COMMAND --help ```来获取指定command更详细的帮助。比如：
+> Docker 客户端非常简单，我们可以直接输入 ``docker`` 命令来查看到 Docker 客户端的所有命令选项。
+或者输入 ``docker COMMAND --help `` 来获取指定command更详细的帮助。比如：
  ```shell
 $ docker images --help
 
@@ -156,10 +156,12 @@ mongo                3.2                 fe9198c04d62        5 days ago         
 ubuntu               18.04               329ed837d508        3 days ago          63.3MB
 ubuntu               bionic              329ed837d508        3 days ago          63.3MB
  ```
-如果仔细观察，会注意到，这里标识的所占用空间和在 Docker Hub 上看到的镜像大小不同。比如，```ubuntu:18.04 ```镜像大小，在这里是 63.3MB，但是在  显示的却是 25.47 MB。这是因为 Docker Hub 中显示的体积是压缩后的体积。在镜像下载和上传过程中镜像是保持着压缩状态的，而 ```docker images ```显示的是镜像下载到本地后展开的大小。
-另外一个需要注意的问题是，```docker image ls ```列表中的镜像体积总和并非是所有镜像实际硬盘消耗。由于 Docker 镜像是多层存储结构，并且可以继承、复用，因此不同镜像可能会因为使用相同的基础镜像，从而拥有共同的层。由于 Docker 使用 Union FS，相同的层只需要保存一份即可，因此实际镜像硬盘占用空间很可能要比这个列表镜像大小的总和要小的多。
 
-我们可以通过 ```docker system df ```命令来便捷的查看镜像、容器、数据卷所占用的空间。
+如果仔细观察，会注意到，这里标识的所占用空间和在 Docker Hub 上看到的镜像大小不同。比如，``ubuntu:18.04 `` 镜像大小，在这里是 63.3MB，但是在  显示的却是 25.47 MB。这是因为 Docker Hub 中显示的体积是压缩后的体积。在镜像下载和上传过程中镜像是保持着压缩状态的，而 ``docker images `` 显示的是镜像下载到本地后展开的大小。
+另外一个需要注意的问题是，``docker image ls `` 列表中的镜像体积总和并非是所有镜像实际硬盘消耗。由于 Docker 镜像是多层存储结构，并且可以继承、复用，因此不同镜像可能会因为使用相同的基础镜像，从而拥有共同的层。由于 Docker 使用 Union FS，相同的层只需要保存一份即可，因此实际镜像硬盘占用空间很可能要比这个列表镜像大小的总和要小的多。
+
+我们可以通过 ``docker system df `` 命令来便捷的查看镜像、容器、数据卷所占用的空间。
+
  ```shell
 $ docker system df
 ​TYPE                TOTAL               ACTIVE              SIZE                RECLAIMABLE
@@ -175,7 +177,7 @@ Build Cache                                                 0B                  
 <none>               <none>              00285df0df87        5 days ago          342 MB
  ```
 
-```docker build ```会导致这种现象。由于新旧镜像同名，旧镜像名称被取消，从而出现仓库名、标签均为 <none> 的镜像。这类无标签镜像也被称为 虚悬镜像(dangling image) ，可以用下面的命令专门显示这类镜像：
+``docker build ``会导致这种现象。由于新旧镜像同名，旧镜像名称被取消，从而出现仓库名、标签均为 <none> 的镜像。这类无标签镜像也被称为 虚悬镜像(dangling image) ，可以用下面的命令专门显示这类镜像：
 
  ```shell
 $ docker image ls -f dangling=true
@@ -235,7 +237,7 @@ $ docker image ls -f label=com.example.version=0.1
 ...
  ```
 #### 用 ID、镜像名、摘要删除镜像
-其中，```<镜像>```可以是 ```镜像短ID```、```镜像长ID```、```镜像名 ```或者 ```镜像摘要```。
+其中，``<镜像>``可以是 ``镜像短ID``、``镜像长ID``、``镜像名 ``或者 ``镜像摘要``。
 比如我们有这么一些镜像：
  ```shell
 $ docker image ls
@@ -246,7 +248,7 @@ docker                      latest              cf693ec9b5c7        3 weeks ago 
 nginx                       latest              e43d811ce2f4        5 weeks ago         181.5 MB
  ```
 我们可以用镜像的完整 ID，也称为 长 ID，来删除镜像。使用脚本的时候可能会用长 ID，但是人工输入就太累了，所以更多的时候是用 短 ID 来删除镜像。docker image ls 默认列出的就已经是短 ID 了，一般取前3个字符以上，只要足够区分于别的镜像就可以了。
-比如这里，如果我们要删除 ```redis:alpine ```镜像，可以执行：
+比如这里，如果我们要删除 ``redis:alpine `` 镜像，可以执行：
  ```
 $ docker image rm 501
 Untagged: redis:alpine
@@ -288,10 +290,10 @@ CMD | 容器启动时执行指定的指令
 ENTRYPOINT | 不会被忽略，一定会被执行，即使运行 docker run时指定了其他命令
 HEALTHCHECK | 健康检查
 
-```COPY [--chown=<user>:<group>] ["<源路径1>",... "<目标路径>"] ```
-```ADD ```指令和 ```COPY ```的格式和性质基本一致。但是在 COPY 基础上增加了一些功能。
-- 比如 ```<源路径> ```可以是一个 URL，这种情况下，Docker 引擎会试图去下载这个链接的文件放到 <目标路径> 去。下载后的文件权限自动设置为 600，如果这并不是想要的权限，那么还需要增加额外的一层 RUN 进行权限调整，另外，如果下载的是个压缩包，需要解压缩，也一样还需要额外的一层 RUN 指令进行解压缩。所以不如直接使用 RUN 指令，然后使用 wget 或者 curl 工具下载，处理权限、解压缩、然后清理无用文件更合理。因此，这个功能其实并不实用，而且不推荐使用。
-- 如果 ```<源路径> ```为一个 tar 压缩文件的话，压缩格式为 gzip, bzip2 以及 xz 的情况下，ADD 指令将会自动解压缩这个压缩文件到 <目标路径> 去。
+``COPY [--chown=<user>:<group>] ["<源路径1>",... "<目标路径>"] ``
+``ADD ``指令和 ``COPY ``的格式和性质基本一致。但是在 COPY 基础上增加了一些功能。
+- 比如 ``<源路径> ``可以是一个 URL，这种情况下，Docker 引擎会试图去下载这个链接的文件放到 <目标路径> 去。下载后的文件权限自动设置为 600，如果这并不是想要的权限，那么还需要增加额外的一层 RUN 进行权限调整，另外，如果下载的是个压缩包，需要解压缩，也一样还需要额外的一层 RUN 指令进行解压缩。所以不如直接使用 RUN 指令，然后使用 wget 或者 curl 工具下载，处理权限、解压缩、然后清理无用文件更合理。因此，这个功能其实并不实用，而且不推荐使用。
+- 如果 ``<源路径> ``为一个 tar 压缩文件的话，压缩格式为 gzip, bzip2 以及 xz 的情况下，ADD 指令将会自动解压缩这个压缩文件到 <目标路径> 去。
 在某些情况下，这个自动解压缩的功能非常有用，比如官方镜像 ubuntu 中：
  ```Dockerfile
 FROM scratch
@@ -353,7 +355,7 @@ USER root
 WORKDIR /opt/tipray/docker/
 ENTRYPOINT ["hello.sh"]
  ```
-- 执行```docker build ```
+- 执行``docker build ``
 ``` shell
 $ docker build -t tipray/hello:0.1 . 
 Sending build context to Docker daemon  5.632kB
@@ -370,13 +372,13 @@ Successfully built e957faa29720
 Successfully tagged tipray/hello:0.1
 ......
  ```
-**```docker build```参数说明**：
+**``docker build``参数说明**：
 -t ：指定要创建的目标镜像名[**一般可以按照这样的规范标识，(dockerhub)用户名/镜像名:标签名(tag)**]
 . ：Dockerfile 文件所在目录
 ## 
 
 #### 镜像制作的扩展技巧
-- 使用```.dockerignore ```排除环境中不需要的文件，用法和```.gitignore```相同，支持正则表达式
+- 使用``.dockerignore ``排除环境中不需要的文件，用法和``.gitignore``相同，支持正则表达式
  ```gitignore
 .git
 */.git
@@ -455,7 +457,7 @@ docker run -it \
     --name my-mysql-main.jmfw \
     my/mysql:0.1
  ```
-官方mysql ```entrtpoint.sh``` 脚本中会读取 ```MYSQL_ROOT_PASSWORD``` 变量并设置为root用户密码
+官方mysql ``entrtpoint.sh`` 脚本中会读取 ``MYSQL_ROOT_PASSWORD`` 变量并设置为root用户密码
 
 
 ##
@@ -475,8 +477,8 @@ CMD ["cat", "/etc/buildinfo"]
 - 让业务进程的pid保持为1：如果业务进程可以在CMD中启动，则使用executable模式；如果必须放在shell脚本中启动，则在业务进程的启动命令前加上exec关键字使其pid保持为1
 
 #### 调试镜像层
-> 很多时候，刚接触Docker的用户都会被镜像生成的过程难倒。Dockerfile 中的每个指令执行后都会产生一个新的统像层，而这个镜像层其实可以用来启动容器。 一个新的镜像层的建立，是用上一层的镜像启动容器，然后执行Dockerfile的指令后，把它保存为一个新的镜像。 当Dockerfile指令成功执行后，中间使用过的那个容器会被删掉，除非提供了 ```-rm=false ```或 ```--squash ``` 等参数
-通过```docker history```查看组成镜像的所有层，当构建失败时，可以把失败前的那个层启动起来。
+> 很多时候，刚接触Docker的用户都会被镜像生成的过程难倒。Dockerfile 中的每个指令执行后都会产生一个新的统像层，而这个镜像层其实可以用来启动容器。 一个新的镜像层的建立，是用上一层的镜像启动容器，然后执行Dockerfile的指令后，把它保存为一个新的镜像。 当Dockerfile指令成功执行后，中间使用过的那个容器会被删掉，除非提供了 ``-rm=false ``或 ``--squash `` 等参数
+通过``docker history``查看组成镜像的所有层，当构建失败时，可以把失败前的那个层启动起来。
  ```shell
  ....
  ---> 043b0f212924
@@ -521,7 +523,7 @@ Docker 为了加快镜像构建的速度, 也会将每一个镜像层缓存下�
 
 这意味着，即使那些每次调用的结果可能都不一样的RUN指令，也仍然会被缓存。如果需要下载文件、执行 apt-get update或复制源码库, 请务必注意这一点。
 
-如果需要使缓存失效，可以在执行 ```docker build ```的时候加上 ```--no-cache ```参数
+如果需要使缓存失效，可以在执行 ``docker build ``的时候加上 ``--no-cache ``参数
 
 #### 规范开发，制定脚本
 ``` perl
@@ -612,8 +614,8 @@ docker load -i my/apprval:0.1.tar.gz
 
 
 在Docker中，要想实现数据的持久化，需要将数据从宿主机挂载到容器中。下面列举2种常见的方式：
-- ```-v``` 或 ```--volume```：挂载存在于宿主机文件系统上，并由宿主机维护者管理。Docker 之外的应用程序/进程也可以对其进行修改
-- ```--mount```：Docker 将为我们管理它们，并且无法在 Docker 外部访问它们（类似于自己的文件系统），可以存储在专用的远程位置（例如，在云中）并将其与系统的其他部分分离，并将其与备份、监控、加密和硬件管理等外部服务集成。
+- ``-v`` 或 ``--volume``：挂载存在于宿主机文件系统上，并由宿主机维护者管理。Docker 之外的应用程序/进程也可以对其进行修改
+- ``--mount``：Docker 将为我们管理它们，并且无法在 Docker 外部访问它们（类似于自己的文件系统），可以存储在专用的远程位置（例如，在云中）并将其与系统的其他部分分离，并将其与备份、监控、加密和硬件管理等外部服务集成。
 
 **使用数据卷的最佳场景**
 1.在多个容器之间共享数据，多个容器可以同时以只读或者读写的方式挂载同一个数据卷，从而共享数据卷中的数据。
@@ -633,7 +635,7 @@ DRIVER              VOLUME NAME
 local               my-vol
 ```
 - 启动一个挂载数据卷的容器
-在用 ```docker run``` 命令的时候，使用 --mount 标记来将 数据卷 挂载到容器里。在一次 docker run 中可以挂载多个 数据卷。
+在用 ``docker run`` 命令的时候，使用 --mount 标记来将 数据卷 挂载到容器里。在一次 docker run 中可以挂载多个 数据卷。
 下面创建一个名为 web 的容器，并加载一个 数据卷 到容器的 /usr/share/nginx/html 目录。
 ```
 $ docker run -d -P \
@@ -665,8 +667,8 @@ $sysctl -w net.ipv4.ip_forward=1
 如果在启动 Docker 服务的时候设定 --ip-forward=true, Docker 就会自动设定系统的 ip_forward 参数为 1
 
 
-#### 使用 ```Docker Compose``` 编排镜像
-```Docker Compose```旨在迅速建立和运行Docker开发环境。大体上，它使用YAML文件来存储不同容器的配置, 节省开发者重复且容易出错的输入，以及避免了自行开发解决方案的负担。当你的应用开始变得复杂时，它就能发挥所长了。Compose将使我们免于自己维护用于服务编排的脚本，包招启动、 连接、更新和停止容器。```docker-compose.yml：```
+#### 使用 ``Docker Compose`` 编排镜像
+``Docker Compose``旨在迅速建立和运行Docker开发环境。大体上，它使用YAML文件来存储不同容器的配置, 节省开发者重复且容易出错的输入，以及避免了自行开发解决方案的负担。当你的应用开始变得复杂时，它就能发挥所长了。Compose将使我们免于自己维护用于服务编排的脚本，包招启动、 连接、更新和停止容器。``docker-compose.yml：``
 ``` yml
 version: '3'
 services:
@@ -690,19 +692,19 @@ services:
       - my-mysql
  ```
 **基础指令**
-```up```
+``up``
 启动所有在Compose 文件中定义的容器，并且把它们的日志信息汇集一起，通常会使用-d参数使Compose 在后台运行。
-```build```
+``build``
 重新建造由 Dockertile 构建的镜像，除非镜像不在在，否则中命令不会技行构建的动作，因此需要更新镜像时便使用这个命令。
-```ps```
+``ps``
 获取由Compose 管理的容器的状态信息。
-```run```
+``run``
 启动一个容器，并运行一个一次性的命令。被连接的容器会同时启动，除非用了-deps参数。
-```logs```
+``logs``
 汇集由Compose 管理的容器的日志，并以彩色输出。
-```down```
+``down``
 停止容器，但不会删除它们。
-```rm```
+``rm``
 删除已停止的容器。不要忘记使用-v参数来删除任何由 Docker 管理的数据卷
 
  ``` shell
