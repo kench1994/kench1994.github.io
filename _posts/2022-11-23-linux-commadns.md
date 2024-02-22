@@ -453,9 +453,8 @@ screen -s yourname -> 新建一个叫yourname的session
 screen -r yourname -> 回到yourname这个session
 screen -d yourname -> 远程detach某个session
 
-screen -X -s yourname quit -> 删除yourname这个session
+screen -X -S yourname quit -> 删除yourname这个session
 
-#注: -s 只需要名字, -S 需要全名(包含id)
  ```
 
 在每个screen session 下，所有命令都以 ctrl+a(C-a) 开始，不释放然后再按下。
