@@ -436,6 +436,9 @@ path: path就是查找路径，默认是./，也就是当前目录开始，也�
 #### 抓取排除ssh
 ``tcpdump -i eth2 port not 22``
 
+- -i 参数制定了网卡，any表示所有网卡
+- tcp 指定仅监听TCP协议
+- port 制定监听的端口
 
 ### iptables
 
