@@ -482,3 +482,60 @@ C-a k -> kill window，强行关闭当前的 window
 
 #### 列出打开文件的进程:
 ``lsof $filename``
+
+
+### **strace**
+跟踪系统调用和信号
+
+- 实例
+
+# 追踪系统调用:
+``strace ./test``
+
+#### 系统调用统计
+``strace -c ./test``
+``` shell
+oracle@orainst[orcl]:~
+$strace -c ./test
+execve("./test", ["./test"], [/* 41 vars */]) = 0
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 45.90    0.000140           5        27        25 open
+ 34.43    0.000105           4        24        21 stat64
+  7.54    0.000023           5         5           old_mmap
+  2.62    0.000008           8         1           munmap
+  1.97    0.000006           6         1           uname
+  1.97    0.000006           2         3           fstat64
+  1.64    0.000005           3         2         1 read
+  1.31    0.000004           2         2           close
+  0.98    0.000003           3         1           brk
+  0.98    0.000003           3         1           mmap2
+  0.66    0.000002           2         1           set_thread_area
+------ ----------- ----------- --------- --------- ----------------
+100.00    0.000305                    68        47 total
+```
+
+- trace一个现有的进程
+``strace -p pid``
+
+- 重定向输出
+``` shell
+# 这两个命令都是将strace结果输出到文件test.txt中
+strace -c -o test.txt ./test
+strace -c ./test  2>test.txt
+```
+
+- 对系统调用进行计时
+``` shell
+oracle@orainst[orcl]:~
+$strace -T ./test
+// 这里只摘录部分结果
+read(0, 1
+"1\n", 1024)                    = 2 <2.673455>
+fstat64(1, {st_mode=S_IFCHR|0620, st_rdev=makedev(136, 0), ...}) = 0 <0.000014>
+mmap2(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0xbf5fe000 <0.000017>
+write(1, "000000001\n", 10000000001
+)             = 10 <0.000016>
+munmap(0xbf5fe000, 4096)                = 0 <0.000020>
+exit_group(0)                           = ?
+```
