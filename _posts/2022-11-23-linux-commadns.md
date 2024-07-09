@@ -253,6 +253,7 @@ $lsof -p 11968
 $lsof -i
 ```
 - 实例8：列出所有tcp 网络连接信息
+
 ``` shell
 $lsof -i tcp
 
@@ -260,16 +261,13 @@ $lsof -n -i tcp
 COMMAND     PID  USER   FD   TYPE  DEVICE SIZE/OFF NODE NAME
 svnserve  11552 weber    3u  IPv4 3799399      0t0  TCP *:svn (LISTEN)
 redis-ser 25501 weber    4u  IPv4  113150      0t0  TCP 127.0.0.1:6379 (LISTEN)
-```
+ ```
 
 - 实例9：列出谁在使用某个端口
-``` shell
-$lsof -i :3306
-```
+`` $lsof -i :3306 ``
+
 - 实例10：列出某个用户的所有活跃的网络端口
-``` shell
-$lsof -a -u test -i
-```
+`` $lsof -a -u test -i ``
 
 - 实例11：根据文件描述列出对应的文件信息
 ``` shell
@@ -279,10 +277,12 @@ $lsof -d description(like 2)
 $lsof -d 3 | grep PARSER1
 tail      6499 tde    3r   REG    253,3   4514722     417798 /opt/applog/open/log/HOSTPARSER1_ERROR_141217.log.001
 ```
+
 - 实例12：列出被进程号为1234的进程所打开的所有IPV4 network files
 ``` shell
 $lsof -i 4 -a -p 1234
 ```
+
 - 实例13：列出目前连接主机nf5260i5-td上端口为：20，21，80相关的所有文件信息，且每隔3秒重复执行
 ``` shell
 lsof -i @nf5260i5-td:20,21,80 -r 3
@@ -440,10 +440,12 @@ path: path就是查找路径，默认是./，也就是当前目录开始，也�
 - tcp 指定仅监听TCP协议
 - port 制定监听的端口
 
+#### 指定网卡 + 限定端口范围 + rst包 + 详细模式 + 写入路径
+``tcpdump -i ens160 'tcp portrange 12000-12030' and 'tcp[13] & 4 != 0' -v -w ./dtsport.pcap``
+
+
+
 ### iptables
-
-
-
 
 ### **screen**
 用于命令行终端切换
