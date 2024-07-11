@@ -449,6 +449,7 @@ path: path就是查找路径，默认是./，也就是当前目录开始，也�
 用于命令行终端切换
 
 - 实例
+
 ``` shell
 screen -ls -> 列出当前所有的session
 
@@ -457,8 +458,7 @@ screen -r yourname -> 回到yourname这个session
 screen -d yourname -> 远程detach某个session
 
 screen -X -S yourname quit -> 删除yourname这个session
-
- ```
+```
 
 在每个screen session 下，所有命令都以 ctrl+a(C-a) 开始，不释放然后再按下。
 
