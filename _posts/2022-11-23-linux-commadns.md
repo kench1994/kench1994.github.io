@@ -270,6 +270,7 @@ redis-ser 25501 weber    4u  IPv4  113150      0t0  TCP 127.0.0.1:6379 (LISTEN)
 `` $lsof -a -u test -i ``
 
 - 实例11：根据文件描述列出对应的文件信息
+
 ``` shell
 $lsof -d description(like 2)
 示例:
@@ -279,11 +280,13 @@ tail      6499 tde    3r   REG    253,3   4514722     417798 /opt/applog/open/lo
 ```
 
 - 实例12：列出被进程号为1234的进程所打开的所有IPV4 network files
+
 ``` shell
 $lsof -i 4 -a -p 1234
 ```
 
 - 实例13：列出目前连接主机nf5260i5-td上端口为：20，21，80相关的所有文件信息，且每隔3秒重复执行
+
 ``` shell
 lsof -i @nf5260i5-td:20,21,80 -r 3
 ```
