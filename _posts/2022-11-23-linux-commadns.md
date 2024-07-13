@@ -461,7 +461,7 @@ screen -r yourname -> 回到yourname这个session
 screen -d yourname -> 远程detach某个session
 
 screen -X -S yourname quit -> 删除yourname这个session
-```
+  ```
 
 在每个screen session 下，所有命令都以 ctrl+a(C-a) 开始，不释放然后再按下。
 
@@ -470,7 +470,7 @@ C-a x -> 锁住当前的 window，需用用户密码解锁
 C-a d -> detach，暂时离开当前session，将目前的 screen session (可能含有多个 windows) 丢到后台执行，并会回到还没进 screen 时的状态，此时在 screen session 里，每个 window 内运行的 process (无论是前台/后台)都在继续执行，即使 logout 也不影响。 
 C-a w -> 显示所有窗口列表
 C-a k -> kill window，强行关闭当前的 window
-```
+ ```
 
 ### lsof
 显示Linux系统当前已打开的所有文件列表 lsof -p pid
