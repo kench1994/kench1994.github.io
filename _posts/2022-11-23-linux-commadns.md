@@ -444,7 +444,7 @@ path: path就是查找路径，默认是./，也就是当前目录开始，也�
 #### 指定网卡 + host + 限定端口范围 + rst包 + 详细模式 + 写入路径
 ``tcpdump -i ens160 'host 192.168.2.151 and tcp portrange 12000-12030' and 'tcp[13] & 4 != 0' -v -w ./dtsport.pcap``
 
-
+``sudo tcpdump -i ens33 host 192.168.30.82 and \(port 20182 or portrange 12000-12030\) -v -w ./dtsport.pcap``
 
 ### iptables
 
