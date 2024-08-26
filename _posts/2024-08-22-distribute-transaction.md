@@ -237,7 +237,7 @@ Confirm/Cancel 方法执行之后，会将状态改为 committed 或 rollbacked 
 
 Seata 的解决方案是为 status 字段增加一个状态：suspended:4。如果发现事务控制表有相关的记录，说明 Cancel 方法已经先 Try 方法执行了，因此 TC 在判断发现 status = 4 时会阻止 Try 方法执行。
 
-#### 6. SAGA 事务
+## 6. SAGA 事务
 
 附上Seata 官方文档对SAGA 的讲解与实现方式：https://seata.io/zh-cn/blog/seata-at-tcc-saga.html
 
