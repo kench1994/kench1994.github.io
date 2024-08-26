@@ -19,14 +19,12 @@ MongoDB 的架构与 MySQL 非常类似，它们底层都使用了可插拔的�
 
 ### mongodb-architecture
 作为 MongoDB 默认的存储引擎，WiredTiger 使用 B 树作为索引底层的数据结构，但是除了 B 树之外，它还支持 LSM 树作为可选的底层存储结构，LSM 树的全称是 Log-structured merge-tree，你可以在 MongoDB 中使用如下所示的命令创建一个基于 LSM 树的集合（Collection）:
-
+``` json
 db.createCollection(    
-
       "posts",  
-      
       { storageEngine: { wiredTiger: {configString: "type=lsm"}}}
-      
-      )
+)
+```
 我们在前端培训这篇文章中不仅会介绍 MongoDB 的默认存储引擎 WiredTiger 为什么选择使用 B 树而不是 B+ 树，还会对 B 树和 LSM 树之间的性能和应用场景进行比较，帮助各位读者更全面地理解今天的问题。
 
 ## 设计
