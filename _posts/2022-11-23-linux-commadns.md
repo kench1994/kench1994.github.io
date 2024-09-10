@@ -270,6 +270,7 @@ redis-ser 25501 weber    4u  IPv4  113150      0t0  TCP 127.0.0.1:6379 (LISTEN)
 `` $lsof -a -u test -i ``
 
 - 实例11：根据文件描述列出对应的文件信息
+
 ``` shell
 $lsof -d description(like 2)
 示例:
@@ -279,11 +280,13 @@ tail      6499 tde    3r   REG    253,3   4514722     417798 /opt/applog/open/lo
 ```
 
 - 实例12：列出被进程号为1234的进程所打开的所有IPV4 network files
+
 ``` shell
 $lsof -i 4 -a -p 1234
 ```
 
 - 实例13：列出目前连接主机nf5260i5-td上端口为：20，21，80相关的所有文件信息，且每隔3秒重复执行
+
 ``` shell
 lsof -i @nf5260i5-td:20,21,80 -r 3
 ```
@@ -441,7 +444,7 @@ path: path就是查找路径，默认是./，也就是当前目录开始，也�
 #### 指定网卡 + host + 限定端口范围 + rst包 + 详细模式 + 写入路径
 ``tcpdump -i ens160 'host 192.168.2.151 and tcp portrange 12000-12030' and 'tcp[13] & 4 != 0' -v -w ./dtsport.pcap``
 
-
+``sudo tcpdump -i ens33 host 192.168.30.82 and \(port 20182 or portrange 12000-12030\) -v -w ./dtsport.pcap``
 
 ### iptables
 
@@ -458,7 +461,7 @@ screen -r yourname -> 回到yourname这个session
 screen -d yourname -> 远程detach某个session
 
 screen -X -S yourname quit -> 删除yourname这个session
-```
+  ```
 
 在每个screen session 下，所有命令都以 ctrl+a(C-a) 开始，不释放然后再按下。
 
@@ -467,7 +470,7 @@ C-a x -> 锁住当前的 window，需用用户密码解锁
 C-a d -> detach，暂时离开当前session，将目前的 screen session (可能含有多个 windows) 丢到后台执行，并会回到还没进 screen 时的状态，此时在 screen session 里，每个 window 内运行的 process (无论是前台/后台)都在继续执行，即使 logout 也不影响。 
 C-a w -> 显示所有窗口列表
 C-a k -> kill window，强行关闭当前的 window
-```
+ ```
 
 ### lsof
 显示Linux系统当前已打开的所有文件列表 lsof -p pid
