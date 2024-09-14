@@ -2,7 +2,7 @@
 layout: post
 title:  字符序
 date:   2024-09-11 09:12:40
-categories: 编码
+categories: 数据库
 tags: 字符序
 ---
 
