@@ -2,7 +2,7 @@
 layout: post
 title:  为什么 MongoDB 使用 B 树
 date:   2024-08-23 20:59:58
-categories: mongodb
+categories: 数据库
 tags: mongodb
 ---
 
