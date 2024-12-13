@@ -2,7 +2,7 @@
 layout: post
 title:  OceanBase社区版-单实例安装
 date:   2024-02-05 13:21:44
-categories: OceanBase
+categories: 数据库
 tags: OceanBase
 ---
 

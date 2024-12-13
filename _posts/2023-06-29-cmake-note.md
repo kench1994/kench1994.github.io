@@ -2,7 +2,7 @@
 layout: post
 title:  cmake 备忘
 date:   2023-06-29 13:36:42
-categories: cmake 
+categories: c/c++ 
 tags: cmake
 ---
 

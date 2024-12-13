@@ -2,7 +2,7 @@
 layout: post
 title: "shell echo with/without quotes"
 date: 2022-08-31 19:14:19
-categories: shell
+categories: linux
 tags: linux
 ---
 
