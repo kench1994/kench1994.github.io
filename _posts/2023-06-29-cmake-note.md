@@ -36,11 +36,14 @@ $ cmake --build ./build/ [--target <target-name>]
 
 ``` cmake
 cmake_minimum_required (VERSION 3.15)
-set(PROJECT_NAME trcsrvcore)
-project(${PROJECT_NAME} VERSION w.x.y.z)
+set(PROJECT_NAME xxx)
+project(tipray_mod VERSION  w.x.y.z LANGUAGES CXX C)
 
-set(CMAKE_C_STANDARD 99)
-set(CMAKE_CXX_STANDARD 11)
+
+set(CMAKE_C_STANDARD 99)  
+set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD 11)  
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_C_FLAGES "${CMAKE_C_FLAGES} -O3 -Wall")
