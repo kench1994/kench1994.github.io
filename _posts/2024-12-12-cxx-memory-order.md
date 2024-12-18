@@ -11,19 +11,22 @@ tags: memory_order
 
 C++11  述了 6 种可以应用于原子变量的内存次序: 
 
-- momory_order_relaxed
-- memory_order_consume
-- memory_order_acquire
-- memory_order_release
-- memory_order_acq_rel
-- memory_order_seq_cst
+- **momory_order_relaxed**
+- **memory_order_consume**
+- **memory_order_acquire**
+- **memory_order_release**
+- **memory_order_acq_rel**
+- **memory_order_seq_cst**
 
 虽然共有 6 个选项,但它们表示的是三种内存模型: 
 
-1. sequential consistent(memory_order_seq_cst)
-relaxed(memory_order_seq_cst)
-2. acquire release(memory_order_consume
-3. memory_order_acquire, memory_order_release, memory_order_acq_rel),
+1. **sequential consistent(memory_order_seq_cst)
+relaxed(memory_order_seq_cst)**
+
+2. **acquire release(memory_order_consume**
+
+3. **memory_order_acquire, memory_order_rele
+ase, memory_order_acq_rel)**
 
 #### 1. Relaxed ordering:
 
