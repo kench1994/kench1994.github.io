@@ -21,7 +21,9 @@ AR=/usr/gcc-linaro-5.4.1-2017.05-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-
 --prefix=$(pwd)/build \
 CFLAGS="-O2 -fPIC"
 
-make -j2 CC=/usr/bin/aarch64-linux-gnu-gcc LD=/usr/bin/aarch64-linux-gnu-ld AR=/usr/bin/aarch64-linux-gnu-ar
+make -j2 CC=/usr/gcc-linaro-5.4.1-2017.05-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-gcc \
+LD=/usr/gcc-linaro-5.4.1-2017.05-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-ld \
+AR=/usr/gcc-linaro-5.4.1-2017.05-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-ar
 
 make install
 
