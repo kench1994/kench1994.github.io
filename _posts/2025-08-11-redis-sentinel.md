@@ -2,7 +2,7 @@
 layout: post
 title:  Redis Sentinel 高可用架构
 date:   2025-08-11 16:46:15
-categories: redis
+categories: 高可用
 tags: redis
 ---
 
