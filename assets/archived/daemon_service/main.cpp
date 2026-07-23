@@ -72,7 +72,7 @@ struct _service_map {
      ""
     },
     {"fileservice",
-     "/usr/local/tiprayftp/sbin/proftpd",
+     "/usr/local/xxx/sbin/proftpd",
      "/var/run/file_service.pid",
      false,
      ""

@@ -90,7 +90,7 @@ docker run \
     -v /opt/mysql/conf:/etc/mysql \
     -v /opt/mysql/logs:/var/log/mysql \
     -v /opt/mysql/data:/var/lib/mysql \
-    -e MYSQL_ROOT_PASSWORD=tipray \
+    -e MYSQL_ROOT_PASSWORD=xxxx \
     -d mysql:5.7 \
     --rm \
     --network=host \
@@ -325,7 +325,7 @@ CMD command param1 ： shell Form
 --retries=<次数>：当连续失败指定次数后，则将容器状态视为 unhealthy，默认 3 次。
 ``` shell
 HEALTHCHECK --interval=5s --timeout=3s \
-  CMD if [ 2 -eq $(ps -aux | grep tipray | grep -v tipray | wc -l) ]; then exit 0; else exit 1; fi
+  CMD if [ 2 -eq $(ps -aux | grep xxxx | grep -v xxxx | wc -l) ]; then exit 0; else exit 1; fi
 ```
 #### 构建步骤
 - 创建基础工作文件夹，比如 DokcerImage
@@ -352,7 +352,7 @@ $cat Dockerfile
 FROM alpine
 LABEL maintainer="huangc" build_date="2022-08-02"
 
-ADD --chown=root:root --chmod=744 bin/ /opt/tipray/docker/
+ADD --chown=root:root --chmod=744 bin/ /opt/xxxx/docker/
 
 RUN apk add --no-cache tzdata \
     && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
@@ -360,26 +360,26 @@ RUN apk add --no-cache tzdata \
     && apk del tzdata
 
 USER root
-WORKDIR /opt/tipray/docker/
+WORKDIR /opt/xxxx/docker/
 ENTRYPOINT ["hello.sh"]
  ```
 
 - 执行``docker build ``
 
 ``` shell
-$ docker build -t tipray/hello:0.1 . 
+$ docker build -t xxxx/hello:0.1 . 
 Sending build context to Docker daemon  5.632kB
 Step 1/7 : FROM alpine
  ---> d7d3d98c851f
 Step 2/7 : LABEL maintainer="huangc" build_date="2022-08-02"
  ---> Using cache
  ---> 05ea6c781a47
-Step 3/7 : ADD --chown=root:root bin/ /opt/tipray/docker/
+Step 3/7 : ADD --chown=root:root bin/ /opt/xxxx/docker/
  ---> Using cache
  ---> 1a844e6a8332
 Step 4/7 : RUN apk add --no-cache tzdata     && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime     && echo "Asia/Shanghai" > /etc/timezone     && apk del tzdata     && ls -l /
 Successfully built e957faa29720
-Successfully tagged tipray/hello:0.1
+Successfully tagged xxxx/hello:0.1
 ......
 ```
 
@@ -426,11 +426,11 @@ RUN apt-get update \
 - 使用 Docker 自带的 ```docker history ```命令，分析所有镜像层的创建时间、指令以及体积等较为基础的信息
 
  ```shell
-$docker history tipray/hello:0.1
+$docker history xxxx/hello:0.1
 IMAGE          CREATED         CREATED BY                                      SIZE      COMMENT
 2bd99827b7b9   2 minutes ago                                                   26.1kB    merge sha256:31869c3d8326ef9d4474835ca7d7f23b34b3a5375e68ccf10676b53e30df8ed9 to sha256:d7d3d98c851ff3a95dbcb70ce09d186c9aaf7e25d48d55c0f99aae360aecfd53
 <missing>      2 minutes ago   /bin/sh -c #(nop)  CMD ["/bin/sh" "-c" "ENTR…   0B        
-<missing>      2 minutes ago   /bin/sh -c #(nop) WORKDIR /opt/tipray/docker/   0B        
+<missing>      2 minutes ago   /bin/sh -c #(nop) WORKDIR /opt/xxxx/docker/   0B        
 <missing>      2 minutes ago   /bin/sh -c #(nop)  USER root                    0B        
 <missing>      2 minutes ago   /bin/sh -c apk add --no-cache tzdata     && …   0B        
 <missing>      2 minutes ago   /bin/sh -c #(nop) ADD --chown=root:rootdir:1…   0B        
@@ -510,13 +510,13 @@ Step 7/7 : CMD ENTRYPOINT ["sh", "hello.sh"]
 Removing intermediate container 1e7bf37d08da
  ---> 854f279eb679
 Successfully built 854f279eb679
-Successfully tagged tipray/hello:0.1
+Successfully tagged xxxx/hello:0.1
 /bin/sh: ENTRYPOINT: not found
 #这边是run失败了,查看镜像层
-$docker history tipray/hello:0.1
+$docker history xxxx/hello:0.1
 IMAGE          CREATED                  CREATED BY                                      SIZE      COMMENT
 854f279eb679   Less than a second ago   /bin/sh -c #(nop)  CMD ["/bin/sh" "-c" "ENTR…   0B        
-043b0f212924   Less than a second ago   /bin/sh -c #(nop) WORKDIR /opt/tipray/docker/   0B        
+043b0f212924   Less than a second ago   /bin/sh -c #(nop) WORKDIR /opt/xxxx/docker/   0B        
 db59f09c9771   1 second ago             /bin/sh -c #(nop)  USER root                    0B        
 40caf336ee25   1 second ago             /bin/sh -c apk add --no-cache tzdata     && …   26kB      
 2db844931aeb   3 seconds ago            /bin/sh -c #(nop) ADD --chown=root:rootdir:1…   63B       
@@ -527,9 +527,9 @@ d7d3d98c851f   2 weeks ago              /bin/sh -c #(nop)  CMD ["/bin/sh"]      
 $ docker run -it --name debug 043b0f212924
 
 #尝试调试
-/opt/tipray/docker # ls
+/opt/xxxx/docker # ls
 hello.sh
-/opt/tipray/docker # sh hello.sh
+/opt/xxxx/docker # sh hello.sh
 hello.sh: line 1: syntax error: unexpected "then" (expecting "do")
 ```
 

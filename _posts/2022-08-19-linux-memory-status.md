@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "linux buffer/cache"
+title: "linux 内存分析"
 date: 2022-08-19 10:19:54
 categories: linux
 tags: linux
@@ -8,6 +8,41 @@ tags: linux
 
 * content
 {:toc}
+
+## 一、free查看系统级内存使用情况
+### (mem)的used/free与(-/+ buffers/cache) used/free的区别
+- 使用的角度来看 
+(mem) 是从OS的角度来看，因为对于OS，buffers/cached 都是属于被使用，所以他的可用内存是151912KB,已用内存是3772468KB,其中包括，内核（OS）使用+Application(X, etc)使用的+buffers+cached. 
+(-/+ buffers/cache) 是从应用程序角度来看，对于应用程序来说，buffers/cached 是等于可用的，因为buffer/cached是为了提高文件读取的性能，当应用程序需在用到内存的时候，buffer/cached会很快地被回收。
+
+- 应用程序的角度 
+可用内存 = free memory + buffers + cached
+
+> ``used-buffers/cache``反映的是被程序实实在在吃掉的内存，而``free+buffers/cache``反映的是可以挪用的内存总数。
+> 如果尝尝 swap 用很多，可能就需要考虑增加物理内存了
+
+## 二、查看进程内存
+
+`` pidstat -p PID -r 2``
+
+- PID：进程标识符
+- Minflt/s:任务每秒发生的次要错误，不需要从磁盘中加载页
+- Majflt/s:任务每秒发生的主要错误，需要从磁盘中加载页
+- VSZ：虚拟地址大小，虚拟内存的使用KB
+- RSS：常驻集合 大小，非交换区五里内存使用KB
+- %MEM ：该进程占用的内存百分比 
+- Command：task命令名
+
+
+> or
+
+`` cat /proc/PID/status`` 
+
+- VmRSS ：进程当前使用的物理内存的大小
+- VmData ：进程占用的数据段大小
+- VmSize ：进程当前使用的虚拟内存的大小
+
+## 三、 扩展阅读
 
 Explained by **Red Hat**:
 
@@ -29,14 +64,3 @@ Buffers are the disk block representation of the data that is stored under the p
 
 
 > Linux tries to make good use of all the free memory, so it is used to cache the system I/O (files transfered to/from memory) in order to reduce further disk access (in your case, serving faster the static content.)
-
-
-### (mem)的used/free与(-/+ buffers/cache) used/free的区别
-- 使用的角度来看 
-(mem) 是从OS的角度来看，因为对于OS，buffers/cached 都是属于被使用，所以他的可用内存是151912KB,已用内存是3772468KB,其中包括，内核（OS）使用+Application(X, etc)使用的+buffers+cached. 
-(-/+ buffers/cache) 是从应用程序角度来看，对于应用程序来说，buffers/cached 是等于可用的，因为buffer/cached是为了提高文件读取的性能，当应用程序需在用到内存的时候，buffer/cached会很快地被回收。
-
-- 应用程序的角度 
-可用内存 = free memory + buffers + cached
-
-> ``used-buffers/cache``反映的是被程序实实在在吃掉的内存，而``free+buffers/cache``反映的是可以挪用的内存总数。

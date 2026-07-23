@@ -183,7 +183,7 @@ For more details see pmap(1).
 ```
 
 ``` shell
-tipray@tipray:~$ sudo pmap -p 699453 | grep info
+xxxx@xxxx:~$ sudo pmap -p 699453 | grep info
 00007f8bb14ea000    372K r-x-- /opt/trdlp/TrDlpEngineSrv/libs_x64/libtrrinfo.so
 00007f8bb1547000   2048K ----- /opt/trdlp/TrDlpEngineSrv/libs_x64/libtrrinfo.so
 00007f8bb1747000     16K rw--- /opt/trdlp/TrDlpEngineSrv/libs_x64/libtrrinfo.so

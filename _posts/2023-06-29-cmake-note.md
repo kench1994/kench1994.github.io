@@ -37,7 +37,7 @@ $ cmake --build ./build/ [--target <target-name>]
 ``` cmake
 cmake_minimum_required (VERSION 3.15)
 set(PROJECT_NAME xxx)
-project(tipray_mod VERSION  w.x.y.z LANGUAGES CXX C)
+project(xxxx_mod VERSION  w.x.y.z LANGUAGES CXX C)
 
 
 set(CMAKE_C_STANDARD 99)  
