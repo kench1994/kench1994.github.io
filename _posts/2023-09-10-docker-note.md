@@ -821,3 +821,14 @@ my-console   | 9908
 - 集群管理
 - (devops)CI/CD 持续集成/持续部署
 - 容器 => 容器云(kubernets)
+
+--- 
+
+### 将用户加入docker用户组
+``sudo usermod -aG docker $USER``
+
+先注销在登陆入系统。重启docker 服务
+
+``sudo service docker restart``
+
+将用户加入docker用户组等同于富余root权限。
